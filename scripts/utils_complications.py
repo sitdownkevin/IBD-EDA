@@ -12,7 +12,7 @@ def who_get_this_disease(_df: pd.DataFrame, _icd_code: str) -> list:
 
 def who_not_get_this_disease(_df, _icd_code) -> list:
     patients_get_this_disease = who_get_this_disease(_df, _icd_code)
-    patients_not_get_this_disease = list(set(_df['subject_id'].unique()) - set(patients_get_this_disease))
+    patients_not_get_this_disease = list(set(_df['subject_id'].unique()) - set(patients_get_this_disease)) # neg unique = total unique - pos unique
     return patients_not_get_this_disease
 
     

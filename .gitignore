@@ -1,2 +1,7 @@
 .venv/*
 data/labevents_death.csv
+scripts/.DS_Store
+.DS_Store
+*.pyc
+*.pyc
+scripts/__pycache__/utils_complications.cpython-310.pyc
