@@ -6,3 +6,4 @@ scripts/.DS_Store
 *.pyc
 scripts/__pycache__/utils_complications.cpython-310.pyc
 scripts/__pycache__/utils_complications.cpython-310.pyc
+*.pyc
