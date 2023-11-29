@@ -11,7 +11,7 @@ data <- cbind(X, y)
 set.seed(123) # 123
 indices <- 1:nrow(data)
 shuffled_indices <- sample(indices)
-train_size <- floor(0.7 * length(indices)) # 修改比例
+train_size <- floor(0.8 * length(indices)) # 修改比例
 train_indices <- shuffled_indices[1:train_size]
 test_indices <- shuffled_indices[(train_size + 1):length(indices)]
 
@@ -32,5 +32,19 @@ print(ci)
 exp(coef(step_model))
 exp(cbind(OR <- coef(step_model), ci))
 
+predictions <- predict(step_model, test_data)
+
+
+# 模型评价
+library(pROC)
+roc_obj <- roc(test_data[, ncol(test_data)], predictions)
+plot(roc_obj, main = "ROC Curve", xlab = "False Positive Rate", ylab = "True Positive Rate")
+
+plot(roc_obj,col="red",#颜色
+     main="ROC Curve - Logistic Regression",
+     legacy.axes=T,#y轴格式更改
+     print.auc=TRUE,#显示AUC面积
+     print.thres=TRUE,#添加截点和95%CI
+     grid=c(0.2,0.2),grid.col=c("blue","yellow"))#网格线设置
 
 
