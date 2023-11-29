@@ -7,3 +7,5 @@ scripts/.DS_Store
 scripts/__pycache__/utils_complications.cpython-310.pyc
 scripts/__pycache__/utils_complications.cpython-310.pyc
 *.pyc
+.Rproj.user
+ r scripts/.RData
