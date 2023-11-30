@@ -6,28 +6,23 @@ y <- read.csv("./data/y.csv", header = TRUE)
 data <- cbind(X, y)
 
 indices <- 1:nrow(data)
-set.seed(123) # <=
+set.seed(123)
 shuffled_indices <- sample(indices) 
-train_size <- floor(0.8 * length(indices)) # <=
+train_size <- floor(0.8 * length(indices))
 
 train_indices <- shuffled_indices[1:train_size]
 test_indices <- shuffled_indices[(train_size + 1):length(indices)]
 train_data <- data[train_indices, ]
 test_data <- data[test_indices, ]
 
-# Logistic Regression using stepAIC
-library('MASS')
-library('caret')
+# 贝叶斯分类器
+library('e1071') # 导入e1071包，其中包含贝叶斯分类器函数naiveBayes()
 
-logit_model <- glm(dod ~ ., data = train_data, family = binomial)
-step_model <- stepAIC(logit_model, direction = "both")
-summary.glm(step_model)
+bayes_model <- naiveBayes(dod ~ ., data = train_data)
+summary(bayes_model)
 
-ci <- confint(step_model)
-exp(cbind(OR <- coef(step_model), ci))
-
-predictions <- predict(step_model, test_data, type="response")
-
+# 在测试数据集上进行预测
+predictions <- predict(bayes_model, test_data[, -ncol(test_data)])
 
 # Performance
 confusion_matrix <- table(test_data[, ncol(test_data)], predictions)
@@ -43,22 +38,3 @@ cat("Recall:", recall, "\n")
 precision <- diag(confusion_matrix) / colSums(confusion_matrix)
 f1_score <- 2 * (precision * recall) / (precision + recall)
 cat("F1 Score:", f1_score, "\n")
-
-
- 
-# ROC Curve
-library(pROC)
-roc_obj <- roc(test_data[, ncol(test_data)], predictions)
-
-plot(
-  roc_obj,
-  col = "red", 
-  main = "ROC Curve - Logistic Regression",
-  legacy.axes = T, # y轴格式更改
-  print.auc = TRUE, # 显示AUC面积
-  print.thres = TRUE, # 添加截点和95%CI
-  grid=c(0.2,0.2),
-  grid.col=c("blue","yellow")
-)
-
-
