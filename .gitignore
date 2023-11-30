@@ -3,9 +3,9 @@ data/labevents_death.csv
 scripts/.DS_Store
 .DS_Store
 *.pyc
-*.pyc
-scripts/__pycache__/utils_complications.cpython-310.pyc
-scripts/__pycache__/utils_complications.cpython-310.pyc
-*.pyc
+
+scripts/__pycache__/
 .Rproj.user
- r scripts/.RData
+
+r scripts/.RData
+r scripts/.ipynb_checkpoints/
