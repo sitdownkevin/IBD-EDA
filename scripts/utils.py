@@ -19,6 +19,7 @@ def load_env_file(root_dir=os.path.dirname(os.path.dirname(os.path.abspath(__fil
     mapping_list = {
         'Darwin': '.env.darwin',
         'Windows': '.env.windows',
+        'Linux': '.env.linux'
     }
     print('  current system:\n    {}'.format(platform.system()))
     if platform.system() not in mapping_list:
