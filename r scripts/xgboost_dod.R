@@ -2,8 +2,8 @@ library('MASS')
 library('caret')
 
 # 加载数据
-X <- read.csv("X.csv", header = TRUE)
-y <- read.csv("y.csv", header = TRUE)
+X <- read.csv("./data/X.csv", header = TRUE)
+y <- read.csv("./data/y.csv", header = TRUE)
 
 # 合并数据集并划分
 data <- cbind(X, y)
