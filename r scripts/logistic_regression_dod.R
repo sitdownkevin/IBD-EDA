@@ -6,9 +6,9 @@ y <- read.csv("./data/y.csv", header = TRUE)
 data <- cbind(X, y)
 
 indices <- 1:nrow(data)
-set.seed(123) # <=
+set.seed(123) # <= 
 shuffled_indices <- sample(indices) 
-train_size <- floor(0.8 * length(indices)) # <=
+train_size <- floor(0.7 * length(indices)) # <=
 
 train_indices <- shuffled_indices[1:train_size]
 test_indices <- shuffled_indices[(train_size + 1):length(indices)]
@@ -30,7 +30,7 @@ predictions <- predict(step_model, test_data, type="response")
 
 
 # Performance
-confusion_matrix <- table(test_data[, ncol(test_data)], predictions)
+confusion_matrix <- table(test_data[, ncol(test_data)], ifelse(predictions > 0.5, 1, 0))
 ## 计算准确率
 accuracy <- sum(diag(confusion_matrix)) / sum(confusion_matrix)
 cat("Accuracy:", accuracy, "\n")
