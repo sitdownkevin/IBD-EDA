@@ -4,7 +4,6 @@ y <- read.csv("./data/y.csv", header = TRUE)
 
 # 划分训练集和测试集
 data <- cbind(X, y)
-
 indices <- 1:nrow(data)
 set.seed(123) # <= 
 shuffled_indices <- sample(indices) 
