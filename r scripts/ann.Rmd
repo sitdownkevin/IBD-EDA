@@ -1,8 +1,9 @@
 ---
 title: ANN
 output:
-  html_document:
-    keep_md: true
+  html_document: 
+    toc: yes
+  pdf_document: default
 ---
 
 # Loading Data

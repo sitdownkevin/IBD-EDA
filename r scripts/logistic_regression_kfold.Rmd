@@ -1,115 +1,28 @@
 ---
-title: Logistic Regression
+title: Cross-Validation Logistic Regression
 output:
-  pdf_document: default
   html_document: 
     toc: yes
+  pdf_document: default
 ---
 
-## Load Dataset
+# Load Dataset
 
 ```{r}
 X <- read.csv("./data/X_.csv", header = TRUE)
 y <- read.csv("./data/y_.csv", header = TRUE)
 ```
 
-## Dataset Division
-
+# Initial Model
 ```{r}
-data <- cbind(X, y)
-
-indices <- 1:nrow(data)
-set.seed(123) # <=
-shuffled_indices <- sample(indices) 
-train_size <- floor(0.7 * length(indices)) # <=
-
-train_indices <- shuffled_indices[1:train_size]
-test_indices <- shuffled_indices[(train_size + 1):length(indices)]
-train_data <- data[train_indices, ]
-test_data <- data[test_indices, ]
+new_formula <- dod ~ age + X25000 + X2761 + X2762 + X27800 + X2875 + X3051 + X311 + X32723 + X412 + X4280 + X51881 + X56089 + X5990 + X99592 + D649 + F419 + N179 + V1582
 
 ```
 
-## Logistic Regression using stepAIC
 
-```{r}
-library('MASS')
-library('caret')
+# Cross Validation 
 
-logit_model <- glm(dod ~ ., data = train_data, family = binomial)
-# step_model <- stepAIC(logit_model, direction = "both")
-suppressMessages(step_model <- stepAIC(logit_model, direction = "both"))
-summary.glm(step_model)
-
-# ci <- confint(step_model)
-# exp(cbind(OR <- coef(step_model), ci))
-# predictions <- predict(step_model, test_data, type="response")
-```
-
-## Re-run
-
-```{r}
-# 定义初始模型
-new_formula <- dod ~ age + X25000 + X2639 + X2761 + X2762 + X2768 + X27800 + X2875 + X3051 + X311 + X32723 + X4019 + X40390 + X412 + X4280 + X496 + X51881 + X5589 + X56089 + X56400 + X56722 + X5990 + X78659 + X99592 + X99859 + D649 + E8490 + F419 + K219 + N179 + V1582 + V442 + V5866 + Z9049
-new_model <- glm(formula = initial_formula, family = binomial, data = train_data)
-summary_model <- summary(new_model)
-```
-
-```{r}
-# 获取最大 p 值的属性
-p_values <- summary_model$coefficients[, "Pr(>|z|)"]
-max_p_value_index <- which.max(p_values)
-max_p_value_attribute <- names(p_values)[max_p_value_index]
-print(max_p_value_attribute)
-
-# 创建新的公式并移除最大 p 值的属性
-new_formula <- update(new_formula, . ~ . - max_p_value_attribute)
-new_model <- glm(formula = new_formula, family = binomial, data = train_data)
-
-# 查看更新后的模型摘要
-summary_model <- summary.glm(new_model)
-new_formula
-```
-
-## Performance
-
-```{r}
-confusion_matrix <- table(test_data[, ncol(test_data)], ifelse(predictions > 0.5, 1, 0))
-
-## 计算准确率
-accuracy <- sum(diag(confusion_matrix)) / sum(confusion_matrix)
-cat("Accuracy:", accuracy, "\n")
-
-## 计算召回率
-recall <- diag(confusion_matrix) / rowSums(confusion_matrix)
-cat("Recall:", recall, "\n")
-
-## 计算F1分数
-precision <- diag(confusion_matrix) / colSums(confusion_matrix)
-f1_score <- 2 * (precision * recall) / (precision + recall)
-cat("F1 Score:", f1_score, "\n")
-
-```
-
-# ROC Curve
-
-```{r}
-library(pROC)
-roc_obj <- roc(test_data[, ncol(test_data)], predictions)
-
-plot(
-  roc_obj,
-  col = "red", 
-  main = "ROC Curve - Logistic Regression",
-  legacy.axes = T, # y轴格式更改
-  print.auc = TRUE, # 显示AUC面积
-  print.thres = TRUE, # 添加截点和95%CI
-  grid=c(0.2,0.2),
-  grid.col=c("blue","yellow")
-)
-```
-
-## Cross Validation Logistic Regression
+## Logistic Regression
 
 ```{r}
 set.seed(123) # Set seed for reproducibility
@@ -117,9 +30,8 @@ set.seed(123) # Set seed for reproducibility
 # Combine X and y into a single dataframe
 data <- cbind(X, y)
 
-
-# Perform 5-fold cross-validation
-num_folds <- 5
+# Perform 10-fold cross-validation
+num_folds <- 10
 folds <- cut(seq(1, nrow(data)), breaks = num_folds, labels = FALSE)
 
 # Create empty vectors to store the predictions and actual values
@@ -127,27 +39,25 @@ all_predictions <- vector()
 all_actuals <- vector()
 
 for (i in 1:num_folds) {
-  indices <- 1:nrow(data)
-  shuffled_indices <- sample(indices) 
-  train_size <- floor(0.7 * length(indices)) # <=
-  
-  train_indices <- shuffled_indices[1:train_size]
-  test_indices <- shuffled_indices[(train_size + 1):length(indices)]
-  train_data <- data[train_indices, ]
-  test_data <- data[test_indices, ]
-  
   # Split the data into training and test sets for the current fold
-  logit_model <- glm(dod ~ ., data = train_data, family = binomial)
+  train_data <- data[folds != i, ]
+  test_data <- data[folds == i, ]
   
-  new_model <- glm(formula = dod ~ age + X2639 + X2761 + X2762 + X27800 + X2875 + X3051 + X311 + X32723 + X412 + X4280 + X51881 + X56089 + X56722 + X5849 + X5990 + X99592 + X99859 + D649 + F419 + N179 + V1582 + X25000 , family = binomial, data = train_data)
+  # Logistic Regression
+  new_model <- glm(formula = new_formula, family = binomial, data = train_data)
 
-  # summary.glm(new_model)
   predictions <- predict(new_model, test_data, type="response")
 
   # Append the predictions and actual values to the vectors
   all_predictions <- c(all_predictions, predictions)
   all_actuals <- c(all_actuals, test_data[, ncol(test_data)])
 }
+
+```
+
+## Performance
+
+```{r}
 
 # Calculate performance metrics on the entire dataset
 confusion_matrix <- table(as.numeric(all_actuals), as.numeric(ifelse(all_predictions > 0.5, 1, 0)))
@@ -167,9 +77,10 @@ cat("F1 Score:", f1_score, "\n")
 
 ```
 
-## Cross Validation Logistic Regression
+## ROC Curve
 
 ```{r}
+library(pROC)
 # Calculate ROC curve using the actual values and predictions
 roc_obj <- roc(all_actuals, all_predictions)
 
@@ -180,6 +91,7 @@ plot(
   main = "ROC Curve - Logistic Regression (Cross-Validation)",
   legacy.axes = TRUE,
   print.auc = TRUE,
+  print.thres = TRUE,
   grid = c(0.2, 0.2),
   grid.col = c("green", "orange")
 )
