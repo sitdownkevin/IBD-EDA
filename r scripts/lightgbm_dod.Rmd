@@ -1,5 +1,5 @@
 ---
-title: XGBoost
+title: LightGBM
 output:
   html_document: 
     toc: yes

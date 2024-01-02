@@ -9,8 +9,8 @@ output:
 ## Load Dataset
 
 ```{r}
-X <- read.csv("./data/X.csv", header = TRUE)
-y <- read.csv("./data/y.csv", header = TRUE)
+X <- read.csv("./data/X_.csv", header = TRUE)
+y <- read.csv("./data/y_.csv", header = TRUE)
 ```
 
 ## Dataset Division
@@ -19,7 +19,7 @@ y <- read.csv("./data/y.csv", header = TRUE)
 data <- cbind(X, y)
 
 indices <- 1:nrow(data)
-# set.seed(123) # <=
+set.seed(123) # <=
 shuffled_indices <- sample(indices) 
 train_size <- floor(0.7 * length(indices)) # <=
 
@@ -37,13 +37,38 @@ library('MASS')
 library('caret')
 
 logit_model <- glm(dod ~ ., data = train_data, family = binomial)
-step_model <- stepAIC(logit_model, direction = "both")
+# step_model <- stepAIC(logit_model, direction = "both")
+suppressMessages(step_model <- stepAIC(logit_model, direction = "both"))
 summary.glm(step_model)
 
-ci <- confint(step_model)
-exp(cbind(OR <- coef(step_model), ci))
+# ci <- confint(step_model)
+# exp(cbind(OR <- coef(step_model), ci))
+# predictions <- predict(step_model, test_data, type="response")
+```
 
-predictions <- predict(step_model, test_data, type="response")
+## Re-run
+
+```{r}
+# 定义初始模型
+new_formula <- dod ~ age + X25000 + X2639 + X2761 + X2762 + X2768 + X27800 + X2875 + X3051 + X311 + X32723 + X4019 + X40390 + X412 + X4280 + X496 + X51881 + X5589 + X56089 + X56400 + X56722 + X5990 + X78659 + X99592 + X99859 + D649 + E8490 + F419 + K219 + N179 + V1582 + V442 + V5866 + Z9049
+new_model <- glm(formula = initial_formula, family = binomial, data = train_data)
+summary_model <- summary(new_model)
+```
+
+```{r}
+# 获取最大 p 值的属性
+p_values <- summary_model$coefficients[, "Pr(>|z|)"]
+max_p_value_index <- which.max(p_values)
+max_p_value_attribute <- names(p_values)[max_p_value_index]
+print(max_p_value_attribute)
+
+# 创建新的公式并移除最大 p 值的属性
+new_formula <- update(new_formula, . ~ . - max_p_value_attribute)
+new_model <- glm(formula = new_formula, family = binomial, data = train_data)
+
+# 查看更新后的模型摘要
+summary_model <- summary.glm(new_model)
+new_formula
 ```
 
 ## Performance
@@ -63,17 +88,6 @@ cat("Recall:", recall, "\n")
 precision <- diag(confusion_matrix) / colSums(confusion_matrix)
 f1_score <- 2 * (precision * recall) / (precision + recall)
 cat("F1 Score:", f1_score, "\n")
-
-```
-
-# Re-run
-
-```{r}
-new_model <- glm(formula = dod ~ age + X2639 + X2761 + X2762 + X27800 + X2875 + X3051 + X311 + X32723 + X412 + X4280 + X51881 + X56089 + X56722 + X5849 + X5990 + X99592 + X99859 + D649 + F419 + N179 + V1582 + X25000 , family = binomial, data = train_data)
-
-summary.glm(new_model)
-
-predictions <- predict(new_model, test_data, type="response")
 
 ```
 
