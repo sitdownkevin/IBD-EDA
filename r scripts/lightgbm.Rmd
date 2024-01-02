@@ -6,12 +6,14 @@ output:
   pdf_document: default
 ---
 
+# Load Data
+
 ```{r}
 X <- read.csv("./data/X_.csv", header = TRUE)
 y <- read.csv("./data/y_.csv", header = TRUE)
 ```
 
-## Dataset Division
+# Dataset Division
 
 ```{r}
 data <- cbind(X, y)
@@ -25,10 +27,9 @@ test_indices <- shuffled_indices[(train_size + 1):length(indices)]
 
 train_data <- data[train_indices, ]
 test_data <- data[test_indices, ]
-
 ```
 
-## LightGBM
+# LightGBM
 
 ```{r}
 library(lightgbm)
@@ -52,7 +53,7 @@ lgb_model <- lgb.train(params, data = dtrain)
 predictions <- predict(lgb_model, test_X)
 ```
 
-## Performance
+# Performance
 
 ```{r}
 confusion_matrix <- table(as.numeric(test_y), as.numeric(ifelse(predictions > 0.5, 1, 0)))
@@ -88,90 +89,5 @@ plot(
   print.thres = TRUE, # 添加截点和95%CI
   grid=c(0.2,0.2),
   grid.col=c("blue","yellow")
-)
-```
-
-## Cross Validation - LightGBM
-
-```{r}
-library(lightgbm)
-
-set.seed(123) # Set seed for reproducibility
-
-# Combine X and y into a single dataframe
-data <- cbind(X, y)
-
-# Perform 5-fold cross-validation
-num_folds <- 5
-folds <- cut(seq(1, nrow(data)), breaks = num_folds, labels = FALSE)
-
-# Create empty vectors to store the predictions and actual values
-all_predictions <- vector()
-all_actuals <- vector()
-
-for (i in 1:num_folds) {
-  # Split the data into training and test sets for the current fold
-  train_data <- data[folds != i, ]
-  test_data <- data[folds == i, ]
-  
-  train_X <- as.matrix(train_data[, -ncol(train_data)])
-  train_y <- train_data[, ncol(train_data)]
-  dtrain <- lgb.Dataset(data = train_X, label = train_y)
-  
-  test_X <- as.matrix(test_data[, -ncol(test_data)])
-  test_y <- test_data[, ncol(test_data)]
-  dtest <- lgb.Dataset(data = test_X, label = test_y)
-  
-  # Define the parameters for the LightGBM model
-  params <- list(
-    objective = "binary",
-    metric = "binary_logloss",
-    num_iterations = 10
-  )
-  
-  # Train the LightGBM model
-  lgb_model <- lgb.train(params, data = dtrain)
-  
-  # Make predictions on the test set
-  predictions <- predict(lgb_model, test_X)
-  
-  # Append the predictions and actual values to the vectors
-  all_predictions <- c(all_predictions, predictions)
-  all_actuals <- c(all_actuals, test_y)
-}
-
-# Calculate performance metrics on the entire dataset
-confusion_matrix <- table(as.numeric(all_actuals), as.numeric(ifelse(all_predictions > 0.5, 1, 0)))
-
-## Calculate Accuracy
-accuracy <- sum(diag(confusion_matrix)) / sum(confusion_matrix)
-cat("Accuracy:", accuracy, "\n")
-
-## Calculate Recall
-recall <- diag(confusion_matrix)[1] / sum(confusion_matrix[1,])
-cat("Recall:", recall, "\n")
-
-## Calculate F1 Score
-precision <- diag(confusion_matrix)[1] / colSums(confusion_matrix)[1]
-f1_score <- 2 * (precision * recall) / (precision + recall)
-cat("F1 Score:", f1_score, "\n")
-
-```
-
-## Cross Validation ROC
-
-```{r}
-# Calculate ROC curve using the actual values and predictions
-roc_obj <- roc(all_actuals, all_predictions)
-
-# Plot the ROC curve
-plot(
-  roc_obj,
-  col = "blue",
-  main = "ROC Curve - LightGBM (Cross-Validation)",
-  legacy.axes = TRUE,
-  print.auc = TRUE,
-  grid = c(0.2, 0.2),
-  grid.col = c("green", "orange")
 )
 ```
