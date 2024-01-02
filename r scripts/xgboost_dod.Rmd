@@ -159,6 +159,7 @@ plot(
   main = "ROC Curve - XGBoost (Cross-Validation)",
   legacy.axes = TRUE,
   print.auc = TRUE,
+  print.thres = TRUE, # 添加截点和95%CI
   grid = c(0.2, 0.2),
   grid.col = c("green", "orange")
 )
