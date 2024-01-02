@@ -1,9 +1,9 @@
 ---
 title: Logistic Regression
 output:
+  pdf_document: default
   html_document: 
     toc: yes
-  pdf_document: default
 ---
 
 ## Load Dataset

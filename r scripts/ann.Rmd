@@ -1,15 +1,16 @@
 ---
-title: "ANN"
+title: ANN
 output:
   html_document:
     keep_md: true
 ---
 
-
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
 
 # 加载数据
-
-```r
+```{r}
 X <- read.csv("./data/X.csv", header = TRUE)
 y <- read.csv("./data/y.csv", header = TRUE)
 
@@ -27,8 +28,7 @@ test_data <- data[test_indices, ]
 ```
 
 # 构建ANN模型
-
-```r
+```{r}
 library(neuralnet)
 
 # 设计ANN模型结构
@@ -40,87 +40,34 @@ trained_model <- ann_model
 ```
 
 # 预测
-
-```r
+```{r}
 predictions <- compute(trained_model, test_data[, -ncol(test_data)])$net.result
 ```
 
 # Performance
-
-```r
+```{r}
 threshold <- 0.5
 predicted_classes <- ifelse(predictions > threshold, 1, 0)
 
 # 计算准确率
 accuracy <- sum(predicted_classes == test_data[, ncol(test_data)]) / nrow(test_data)
 cat("Accuracy:", accuracy, "\n")
-```
 
-```
-## Accuracy: 0.8657025
-```
-
-```r
 # 计算召回率
 recall <- sum(predicted_classes == 1 & test_data[, ncol(test_data)] == 1) / sum(test_data[, ncol(test_data)] == 1)
 cat("Recall:", recall, "\n")
-```
 
-```
-## Recall: 0.3529412
-```
-
-```r
 # 计算F1分数
 precision <- sum(predicted_classes == 1 & test_data[, ncol(test_data)] == 1) / sum(predicted_classes == 1)
 f1_score <- 2 * (precision * recall) / (precision + recall)
 cat("F1 Score:", f1_score, "\n")
 ```
 
-```
-## F1 Score: 0.4247788
-```
-
 # ROC Curve
-
-```r
+```{r}
 library(pROC)
-```
-
-```
-## Type 'citation("pROC")' for a citation.
-```
-
-```
-## 
-## Attaching package: 'pROC'
-```
-
-```
-## The following objects are masked from 'package:stats':
-## 
-##     cov, smooth, var
-```
-
-```r
 roc_obj <- roc(test_data[, ncol(test_data)], predictions)
-```
 
-```
-## Setting levels: control = 0, case = 1
-```
-
-```
-## Warning in roc.default(test_data[, ncol(test_data)], predictions): Deprecated
-## use a matrix as predictor. Unexpected results may be produced, please pass a
-## numeric vector.
-```
-
-```
-## Setting direction: controls < cases
-```
-
-```r
 plot(
   roc_obj,
   col = "red", 
@@ -132,5 +79,3 @@ plot(
   grid.col=c("blue","yellow")
 )
 ```
-
-![](ann_dod_files/figure-html/unnamed-chunk-5-1.png)<!-- -->

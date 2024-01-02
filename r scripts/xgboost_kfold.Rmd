@@ -1,95 +1,23 @@
 ---
-title: XGBoost
+title: XGBoost K-fold
 output:
   html_document: 
     toc: yes
   pdf_document: default
 ---
 
-## Load Dataset
+# Load Dataset
 
 ```{r}
 X <- read.csv("./data/X_.csv", header = TRUE)
 y <- read.csv("./data/y_.csv", header = TRUE)
 ```
 
-## Dataset Division
+# Cross Validation 
 
-```{r}
-data <- cbind(X, y)
+## XGBoost Training
 
-set.seed(123) # 123
-indices <- 1:nrow(data)
-shuffled_indices <- sample(indices)
-train_size <- floor(0.7 * length(indices)) # 修改比例
-train_indices <- shuffled_indices[1:train_size]
-test_indices <- shuffled_indices[(train_size + 1):length(indices)]
-
-train_data <- data[train_indices, ]
-test_data <- data[test_indices, ]
-
-```
-
-## XGBoost
-
-```{r}
-library(xgboost)
-
-train_X <- as.matrix(train_data[, -ncol(train_data)])
-train_y <- train_data[, ncol(train_data)]
-dtrain <- xgb.DMatrix(data = train_X, label = train_y)
-
-test_X <- as.matrix(test_data[, -ncol(test_data)])
-test_y <- test_data[, ncol(test_data)]
-dtest <- xgb.DMatrix(data = test_X, label = test_y)
-
-xgb_model <- xgboost(data = dtrain, nrounds = 10, objective = "binary:logistic")
-
-predictions <- predict(xgb_model, dtest)
-```
-
-## Performance
-
-```{r}
-confusion_matrix <- table(as.numeric(test_y), as.numeric(ifelse(predictions > 0.5, 1, 0)))
-
-## 计算 Accuracy
-accuracy <- sum(diag(confusion_matrix)) / sum(confusion_matrix)
-cat("Accuracy:", accuracy, "\n")
-
-## 计算 Recall
-recall <- diag(confusion_matrix)[1] / sum(confusion_matrix[1,])
-cat("Recall:", recall, "\n")
-
-## 计算 F1 Score
-precision <- diag(confusion_matrix)[1] / colSums(confusion_matrix)[1]
-f1_score <- 2 * (precision * recall) / (precision + recall)
-cat("F1 Score:", f1_score, "\n")
-
-```
-
-# ROC Curve
-
-```{r}
-library(pROC)
-roc_obj <- roc(as.numeric(test_y), 
-               as.numeric(predictions),)
-
-plot(
-  roc_obj,
-  col = "red", 
-  main = "ROC Curve - XGBoost",
-  legacy.axes = T, # y轴格式更改
-  print.auc = TRUE, # 显示AUC面积
-  print.thres = TRUE, # 添加截点和95%CI
-  grid=c(0.2,0.2),
-  grid.col=c("blue","yellow")
-)
-```
-
-## Cross Validation XGBoost
-
-```{r}
+```{r, results = 'hide'}
 library(xgboost)
 
 set.seed(123) # Set seed for reproducibility
@@ -97,8 +25,8 @@ set.seed(123) # Set seed for reproducibility
 # Combine X and y into a single dataframe
 data <- cbind(X, y)
 
-# Perform 5-fold cross-validation
-num_folds <- 5
+# Perform 10-fold cross-validation
+num_folds <- 10
 folds <- cut(seq(1, nrow(data)), breaks = num_folds, labels = FALSE)
 
 # Create empty vectors to store the predictions and actual values
@@ -117,7 +45,7 @@ for (i in 1:num_folds) {
   test_X <- as.matrix(test_data[, -ncol(test_data)])
   test_y <- test_data[, ncol(test_data)]
   dtest <- xgb.DMatrix(data = test_X, label = test_y)
-  
+
   # Train the XGBoost model
   xgb_model <- xgboost(data = dtrain, nrounds = 10, objective = "binary:logistic")
   
@@ -128,7 +56,11 @@ for (i in 1:num_folds) {
   all_predictions <- c(all_predictions, predictions)
   all_actuals <- c(all_actuals, test_y)
 }
+```
 
+## Performance
+
+```{r}
 # Calculate performance metrics on the entire dataset
 confusion_matrix <- table(as.numeric(all_actuals), as.numeric(ifelse(all_predictions > 0.5, 1, 0)))
 
@@ -146,9 +78,10 @@ f1_score <- 2 * (precision * recall) / (precision + recall)
 cat("F1 Score:", f1_score, "\n")
 ```
 
-## Cross Validtion ROC
+## ROC Curve
 
 ```{r}
+library(pROC)
 # Calculate ROC curve using the actual values and predictions
 roc_obj <- roc(all_actuals, all_predictions)
 
@@ -159,7 +92,7 @@ plot(
   main = "ROC Curve - XGBoost (Cross-Validation)",
   legacy.axes = TRUE,
   print.auc = TRUE,
-  print.thres = TRUE, # 添加截点和95%CI
+  print.thres = TRUE,
   grid = c(0.2, 0.2),
   grid.col = c("green", "orange")
 )
