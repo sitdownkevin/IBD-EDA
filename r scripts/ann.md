@@ -7,14 +7,16 @@ output:
 
 # Loading Data
 
-```{r}
+
+```r
 X <- read.csv("./data/X_.csv", header = TRUE)
 y <- read.csv("./data/y_.csv", header = TRUE)
 ```
 
 # Dataset Division
 
-```{r}
+
+```r
 data <- cbind(X, y)
 indices <- 1:nrow(data)
 set.seed(123) 
@@ -29,7 +31,8 @@ test_data <- data[test_indices, ]
 
 # ANN Training
 
-```{r}
+
+```r
 library(neuralnet)
 
 # 设计ANN模型结构
@@ -42,34 +45,87 @@ trained_model <- ann_model
 
 # Prediction
 
-```{r}
+
+```r
 predictions <- compute(trained_model, test_data[, -ncol(test_data)])$net.result
 ```
 
 # Performance
-```{r}
+
+```r
 threshold <- 0.5
 predicted_classes <- ifelse(predictions > threshold, 1, 0)
 
 # 计算准确率
 accuracy <- sum(predicted_classes == test_data[, ncol(test_data)]) / nrow(test_data)
 cat("Accuracy:", accuracy, "\n")
+```
 
+```
+## Accuracy: 0.8209366
+```
+
+```r
 # 计算召回率
 recall <- sum(predicted_classes == 1 & test_data[, ncol(test_data)] == 1) / sum(test_data[, ncol(test_data)] == 1)
 cat("Recall:", recall, "\n")
+```
 
+```
+## Recall: 0.3660714
+```
+
+```r
 # 计算F1分数
 precision <- sum(predicted_classes == 1 & test_data[, ncol(test_data)] == 1) / sum(predicted_classes == 1)
 f1_score <- 2 * (precision * recall) / (precision + recall)
 cat("F1 Score:", f1_score, "\n")
 ```
 
-# ROC Curve
-```{r}
-library(pROC)
-roc_obj <- roc(test_data[, ncol(test_data)], predictions)
+```
+## F1 Score: 0.3867925
+```
 
+# ROC Curve
+
+```r
+library(pROC)
+```
+
+```
+## Type 'citation("pROC")' for a citation.
+```
+
+```
+## 
+## Attaching package: 'pROC'
+```
+
+```
+## The following objects are masked from 'package:stats':
+## 
+##     cov, smooth, var
+```
+
+```r
+roc_obj <- roc(test_data[, ncol(test_data)], predictions)
+```
+
+```
+## Setting levels: control = 0, case = 1
+```
+
+```
+## Warning in roc.default(test_data[, ncol(test_data)], predictions): Deprecated
+## use a matrix as predictor. Unexpected results may be produced, please pass a
+## numeric vector.
+```
+
+```
+## Setting direction: controls < cases
+```
+
+```r
 plot(
   roc_obj,
   col = "red", 
@@ -81,3 +137,5 @@ plot(
   grid.col=c("blue","yellow")
 )
 ```
+
+![](ann_files/figure-html/unnamed-chunk-6-1.png)<!-- -->
