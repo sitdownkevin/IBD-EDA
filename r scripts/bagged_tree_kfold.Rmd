@@ -1,0 +1,98 @@
+---
+title: Cross Validation - Baggged Tree
+output:
+  html_document: 
+    toc: yes
+  pdf_document: default
+---
+
+# Load Dataset
+
+```{r}
+X <- read.csv("./data/X_.csv", header = TRUE)
+y <- read.csv("./data/y_.csv", header = TRUE)
+```
+
+# Cross Validation
+
+## Bagged Tree
+
+```{r}
+library(randomForest)
+
+set.seed(123) # Set seed for reproducibility
+
+# Combine X and y into a single dataframe
+data <- cbind(X, y)
+
+# Perform 10-fold cross-validation
+num_folds <- 10
+folds <- cut(seq(1, nrow(data)), breaks = num_folds, labels = FALSE)
+
+# Create empty vectors to store the predictions and actual values
+all_predictions <- vector()
+all_actuals <- vector()
+
+for (i in 1:num_folds) {
+  # Split the data into training and test sets for the current fold
+  train_data <- data[folds != i, ]
+  test_data <- data[folds == i, ]
+  
+  train_X <- as.matrix(train_data[, -ncol(train_data)])
+  train_y <- train_data[, ncol(train_data)]
+  test_X <- as.matrix(test_data[, -ncol(test_data)])
+  test_y <- test_data[, ncol(test_data)]
+
+  # Train the Bagged Tree model
+  bagged_tree <- randomForest(train_X, train_y, ntree = 100)
+  
+  # Make predictions on the test set
+  predictions <- predict(bagged_tree, test_X)
+  
+  # Append the predictions and actual values to the vectors
+  all_predictions <- c(all_predictions, predictions)
+  all_actuals <- c(all_actuals, test_y)
+}
+```
+
+## Performance
+
+```{r}
+# Calculate performance metrics on the entire dataset
+confusion_matrix <- table(as.numeric(all_actuals), as.numeric(ifelse(all_predictions > 0.5, 1, 0)))
+
+## Calculate Accuracy
+accuracy <- sum(diag(confusion_matrix)) / sum(confusion_matrix)
+cat("Accuracy:", accuracy, "\n")
+
+## Calculate Recall
+recall <- diag(confusion_matrix)[1] / sum(confusion_matrix[1,])
+cat("Recall:", recall, "\n")
+
+## Calculate F1 Score
+precision <- diag(confusion_matrix)[1] / colSums(confusion_matrix)[1]
+f1_score <- 2 * (precision * recall) / (precision + recall)
+cat("F1 Score:", f1_score, "\n")
+```
+
+## ROC Curve
+
+```{r}
+library(pROC)
+# Calculate ROC curve using the actual values and predictions
+roc_obj <- roc(all_actuals, all_predictions)
+
+# Plot the ROC curve
+plot(
+  roc_obj,
+  col = "blue",
+  main = "ROC Curve - Bagged Tree (Cross-Validation)",
+  legacy.axes = TRUE,
+  print.auc = TRUE,
+  print.thres = TRUE,
+  grid = c(0.2, 0.2),
+  grid.col = c("green", "orange")
+)
+```
+
+

@@ -1,24 +1,24 @@
 ---
-title: Linear SVM
+title: Cubic SVM
 output:
   html_document: 
     toc: yes
   pdf_document: default
 ---
 
-## Load Dataset
+# Load Dataset
 
 ```{r}
 X <- read.csv("./data/X_.csv", header = TRUE)
 y <- read.csv("./data/y_.csv", header = TRUE)
 ```
 
-## Dataset Division
+# Dataset Division
 
 ```{r}
 data <- cbind(X, y)
 
-# set.seed(123) # 123
+set.seed(123) # 123
 indices <- 1:nrow(data)
 shuffled_indices <- sample(indices)
 train_size <- floor(0.7 * length(indices)) # 修改比例
@@ -28,23 +28,26 @@ test_indices <- shuffled_indices[(train_size + 1):length(indices)]
 train_data <- data[train_indices, ]
 test_data <- data[test_indices, ]
 
+train_X <- as.matrix(train_data[, -ncol(train_data)])
+train_y <- train_data[, ncol(train_data)]
+test_X <- as.matrix(test_data[, -ncol(test_data)])
+test_y <- test_data[, ncol(test_data)]
 ```
 
-## Cubic SVM
+# Cubic SVM
 
 ```{r}
 # Load the e1071 library
 library(e1071)
 
-# Train a Linear SVM model
-linear_svm_model <- svm(dod ~ ., data = train_data, kernel = "linear")
+# Train a Cubic SVM model
+cubic_svm_model <- svm(dod ~ ., data = train_data, kernel = "polynomial", degree = 3)
 
 # Make predictions using the trained models
-predictions <- predict(linear_svm_model, newdata = test_data)
-
+predictions <- predict(cubic_svm_model, newdata = test_data)
 ```
 
-## Performance
+# Performance
 
 ```{r}
 confusion_matrix <- table(as.numeric(test_y), as.numeric(ifelse(predictions > 0.5, 1, 0)))
@@ -74,7 +77,7 @@ roc_obj <- roc(as.numeric(test_y),
 plot(
   roc_obj,
   col = "red", 
-  main = "ROC Curve - Linear SVM",
+  main = "ROC Curve - Cubic SVM",
   legacy.axes = T, # y轴格式更改
   print.auc = TRUE, # 显示AUC面积
   print.thres = TRUE, # 添加截点和95%CI
