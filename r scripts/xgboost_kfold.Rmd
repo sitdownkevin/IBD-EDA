@@ -9,8 +9,8 @@ output:
 # Load Dataset
 
 ```{r}
-X <- read.csv("./data/X_.csv", header = TRUE)
-y <- read.csv("./data/y_.csv", header = TRUE)
+X <- read.csv("./data/X__.csv", header = TRUE)
+y <- read.csv("./data/y__.csv", header = TRUE)
 ```
 
 # Cross Validation 
@@ -62,18 +62,32 @@ for (i in 1:num_folds) {
 
 ```{r}
 # Calculate performance metrics on the entire dataset
-confusion_matrix <- table(as.numeric(all_actuals), as.numeric(ifelse(all_predictions > 0.5, 1, 0)))
+confusion_matrix <- table(
+  as.numeric(all_actuals), as.numeric(ifelse(all_predictions > 0.5, 1, 0))
+)
+
+TP <- confusion_matrix[1, 1]
+TN <- confusion_matrix[2, 2]
+FP <- confusion_matrix[2, 1]
+FN <- confusion_matrix[1, 2]
 
 ## Calculate Accuracy
-accuracy <- sum(diag(confusion_matrix)) / sum(confusion_matrix)
+accuracy <- (TP + TN) / (TP + FP + TN + FN)
 cat("Accuracy:", accuracy, "\n")
 
 ## Calculate Recall
-recall <- diag(confusion_matrix)[1] / sum(confusion_matrix[1,])
+recall <- TP / (TP + FN)
 cat("Recall:", recall, "\n")
 
+## Calculate Precision
+precision <- TP / (TP + FP)
+cat("Precision:", precision, "\n")
+
+## Calculate Specificity
+specificity <- TN / (TN + FP)
+cat("Specificity:", specificity, "\n")
+
 ## Calculate F1 Score
-precision <- diag(confusion_matrix)[1] / colSums(confusion_matrix)[1]
 f1_score <- 2 * (precision * recall) / (precision + recall)
 cat("F1 Score:", f1_score, "\n")
 ```
