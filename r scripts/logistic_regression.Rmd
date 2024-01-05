@@ -59,21 +59,33 @@ predictions <- predict(step_model, test_data, type="response")
 # Performance
 
 ```{r}
+# Calculate performance metrics on the entire dataset
 confusion_matrix <- table(test_data[, ncol(test_data)], ifelse(predictions > 0.5, 1, 0))
 
-## 计算准确率
-accuracy <- sum(diag(confusion_matrix)) / sum(confusion_matrix)
+TP <- confusion_matrix[1, 1]
+TN <- confusion_matrix[2, 2]
+FP <- confusion_matrix[2, 1]
+FN <- confusion_matrix[1, 2]
+
+## Calculate Accuracy
+accuracy <- (TP + TN) / (TP + FP + TN + FN)
 cat("Accuracy:", accuracy, "\n")
 
-## 计算召回率
-recall <- diag(confusion_matrix) / rowSums(confusion_matrix)
+## Calculate Recall
+recall <- TP / (TP + FN)
 cat("Recall:", recall, "\n")
 
-## 计算F1分数
-precision <- diag(confusion_matrix) / colSums(confusion_matrix)
+## Calculate Precision
+precision <- TP / (TP + FP)
+cat("Precision:", precision, "\n")
+
+## Calculate Specificity
+specificity <- TN / (TN + FP)
+cat("Specificity:", specificity, "\n")
+
+## Calculate F1 Score
 f1_score <- 2 * (precision * recall) / (precision + recall)
 cat("F1 Score:", f1_score, "\n")
-
 ```
 
 # ROC Curve

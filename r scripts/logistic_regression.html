@@ -502,21 +502,34 @@ step_model &lt;- new_model
 </div>
 <div id="performance" class="section level1">
 <h1>Performance</h1>
-<pre class="r"><code>confusion_matrix &lt;- table(test_data[, ncol(test_data)], ifelse(predictions &gt; 0.5, 1, 0))
+<pre class="r"><code># Calculate performance metrics on the entire dataset
+confusion_matrix &lt;- table(test_data[, ncol(test_data)], ifelse(predictions &gt; 0.5, 1, 0))
 
-## 计算准确率
-accuracy &lt;- sum(diag(confusion_matrix)) / sum(confusion_matrix)
+TP &lt;- confusion_matrix[1, 1]
+TN &lt;- confusion_matrix[2, 2]
+FP &lt;- confusion_matrix[2, 1]
+FN &lt;- confusion_matrix[1, 2]
+
+## Calculate Accuracy
+accuracy &lt;- (TP + TN) / (TP + FP + TN + FN)
 cat(&quot;Accuracy:&quot;, accuracy, &quot;\n&quot;)</code></pre>
 <pre><code>## Accuracy: 0.8526171</code></pre>
-<pre class="r"><code>## 计算召回率
-recall &lt;- diag(confusion_matrix) / rowSums(confusion_matrix)
+<pre class="r"><code>## Calculate Recall
+recall &lt;- TP / (TP + FN)
 cat(&quot;Recall:&quot;, recall, &quot;\n&quot;)</code></pre>
-<pre><code>## Recall: 0.9315961 0.4196429</code></pre>
-<pre class="r"><code>## 计算F1分数
-precision &lt;- diag(confusion_matrix) / colSums(confusion_matrix)
+<pre><code>## Recall: 0.9315961</code></pre>
+<pre class="r"><code>## Calculate Precision
+precision &lt;- TP / (TP + FP)
+cat(&quot;Precision:&quot;, precision, &quot;\n&quot;)</code></pre>
+<pre><code>## Precision: 0.8979592</code></pre>
+<pre class="r"><code>## Calculate Specificity
+specificity &lt;- TN / (TN + FP)
+cat(&quot;Specificity:&quot;, specificity, &quot;\n&quot;)</code></pre>
+<pre><code>## Specificity: 0.4196429</code></pre>
+<pre class="r"><code>## Calculate F1 Score
 f1_score &lt;- 2 * (precision * recall) / (precision + recall)
 cat(&quot;F1 Score:&quot;, f1_score, &quot;\n&quot;)</code></pre>
-<pre><code>## F1 Score: 0.9144684 0.4676617</code></pre>
+<pre><code>## F1 Score: 0.9144684</code></pre>
 </div>
 <div id="roc-curve" class="section level1">
 <h1>ROC Curve</h1>

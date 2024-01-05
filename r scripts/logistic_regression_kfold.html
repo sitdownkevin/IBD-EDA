@@ -414,18 +414,32 @@ for (i in 1:num_folds) {
 <div id="performance" class="section level2">
 <h2>Performance</h2>
 <pre class="r"><code># Calculate performance metrics on the entire dataset
-confusion_matrix &lt;- table(as.numeric(all_actuals), as.numeric(ifelse(all_predictions &gt; 0.5, 1, 0)))
+confusion_matrix &lt;- table(
+  as.numeric(all_actuals), as.numeric(ifelse(all_predictions &gt; 0.5, 1, 0))
+)
+
+TP &lt;- confusion_matrix[1, 1]
+TN &lt;- confusion_matrix[2, 2]
+FP &lt;- confusion_matrix[2, 1]
+FN &lt;- confusion_matrix[1, 2]
 
 ## Calculate Accuracy
-accuracy &lt;- sum(diag(confusion_matrix)) / sum(confusion_matrix)
+accuracy &lt;- (TP + TN) / (TP + FP + TN + FN)
 cat(&quot;Accuracy:&quot;, accuracy, &quot;\n&quot;)</code></pre>
 <pre><code>## Accuracy: 0.8725693</code></pre>
 <pre class="r"><code>## Calculate Recall
-recall &lt;- diag(confusion_matrix)[1] / sum(confusion_matrix[1,])
+recall &lt;- TP / (TP + FN)
 cat(&quot;Recall:&quot;, recall, &quot;\n&quot;)</code></pre>
 <pre><code>## Recall: 0.9607266</code></pre>
+<pre class="r"><code>## Calculate Precision
+precision &lt;- TP / (TP + FP)
+cat(&quot;Precision:&quot;, precision, &quot;\n&quot;)</code></pre>
+<pre><code>## Precision: 0.8956522</code></pre>
+<pre class="r"><code>## Calculate Specificity
+specificity &lt;- TN / (TN + FP)
+cat(&quot;Specificity:&quot;, specificity, &quot;\n&quot;)</code></pre>
+<pre><code>## Specificity: 0.4</code></pre>
 <pre class="r"><code>## Calculate F1 Score
-precision &lt;- diag(confusion_matrix)[1] / colSums(confusion_matrix)[1]
 f1_score &lt;- 2 * (precision * recall) / (precision + recall)
 cat(&quot;F1 Score:&quot;, f1_score, &quot;\n&quot;)</code></pre>
 <pre><code>## F1 Score: 0.9270488</code></pre>
