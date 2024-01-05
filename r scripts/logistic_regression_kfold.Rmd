@@ -9,13 +9,15 @@ output:
 # Load Dataset
 
 ```{r}
-X <- read.csv("./data/X_.csv", header = TRUE)
-y <- read.csv("./data/y_.csv", header = TRUE)
+X <- read.csv("./data/X__.csv", header = TRUE)
+y <- read.csv("./data/y__.csv", header = TRUE)
 ```
 
 # Initial Model
 ```{r}
-new_formula <- dod ~ age + X25000 + X2761 + X2762 + X27800 + X2875 + X3051 + X311 + X32723 + X412 + X4280 + X51881 + X56089 + X5990 + X99592 + D649 + F419 + N179 + V1582
+# new_formula <- dod ~ age + X25000 + X2761 + X2762 + X27800 + X2875 + X3051 + X311 + X32723 + X412 + X4280 + X51881 + X56089 + X5990 + X99592 + D649 + F419 + N179 + V1582
+
+new_formula <- dod ~ age0 + X25000 + X2761 + X2762 + X27800 + X2875 + X3051 + X311 + X32723 + X40390 + X412 + X4280 + X51881 + X56089 + X5990 + X99592 + D649 + K219 + N179
 
 ```
 

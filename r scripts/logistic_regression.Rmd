@@ -9,8 +9,8 @@ output:
 # Load Dataset
 
 ```{r}
-X <- read.csv("./data/X_.csv", header = TRUE)
-y <- read.csv("./data/y_.csv", header = TRUE)
+X <- read.csv("./data/X__.csv", header = TRUE)
+y <- read.csv("./data/y__.csv", header = TRUE)
 ```
 
 # Dataset Division
@@ -36,13 +36,15 @@ test_data <- data[test_indices, ]
 library('MASS')
 library('caret')
 
-new_formula <- dod ~ age + X25000 + X2639 + X2761 + X2762 + X2768 + X27800 + X2875 + X3051 + X311 + X32723 + X4019 + X40390 + X412 + X4280 + X496 + X51881 + X5589 + X56089 + X56400 + X56722 + X5990 + X78659 + X99592 + X99859 + D649 + E8490 + F419 + K219 + N179 + V1582 + V442 + V5866 + Z9049
+# new_formula <- dod ~ age + X25000 + X2639 + X2761 + X2762 + X2768 + X27800 + X2875 + X3051 + X311 + X32723 + X4019 + X40390 + X412 + X4280 + X496 + X51881 + X5589 + X56089 + X56400 + X56722 + X5990 + X78659 + X99592 + X99859 + D649 + E8490 + F419 + K219 + N179 + V1582 + V442 + V5866 + Z9049
+
+new_formula <- dod ~ age0 + X25000 + X2639 + X2761 + X2762 + X2768 + X27800 + X2875 + X3051 + X311 + X32723 + X4019 + X40390 + X412 + X4280 + X51881 + X5589 + X56089 + X56722 + X5990 + X73300 + X78321 + X7850 + X78659 + X99592 + X99859 + D649 + E8490 + K219 + N179 + V1582 + V442 + Y929 + Z9049
 new_model <- glm(formula = new_formula, family = binomial, data = train_data)
 summary_model <- summary(new_model)
+step_model <- new_model
 
 # logit_model <- glm(dod ~ ., data = train_data, family = binomial)
 # step_model <- stepAIC(logit_model, direction = "both")
-step_model <- new_model
 ```
 
 # CI
@@ -102,7 +104,7 @@ print(max_p_value_attribute)
 ```
 
 ```{r}
-new_formula <- update(new_formula, . ~ . - K219)
+new_formula <- update(new_formula, . ~ . - X5589)
 new_model <- glm(formula = new_formula, family = binomial, data = train_data)
 summary_model <- summary(new_model)
 
@@ -110,6 +112,18 @@ p_values <- summary_model$coefficients[, "Pr(>|z|)"]
 max_p_value_index <- which.max(p_values)
 max_p_value_attribute <- names(p_values)[max_p_value_index]
 print(max_p_value_attribute)
+```
+
+```{r}
+new_formula <- update(new_formula, . ~ . - X7850)
+new_model <- glm(formula = new_formula, family = binomial, data = train_data)
+summary_model <- summary(new_model)
+
+p_values <- summary_model$coefficients[, "Pr(>|z|)"]
+max_p_value_index <- which.max(p_values)
+max_p_value_attribute <- names(p_values)[max_p_value_index]
+print(max_p_value_attribute)
+print(max(p_values))
 ```
 
 ```{r}
@@ -125,7 +139,7 @@ print(max(p_values))
 ```
 
 ```{r}
-new_formula <- update(new_formula, . ~ . - Z9049)
+new_formula <- update(new_formula, . ~ . - X78321)
 new_model <- glm(formula = new_formula, family = binomial, data = train_data)
 summary_model <- summary(new_model)
 
@@ -149,7 +163,7 @@ print(max(p_values))
 ```
 
 ```{r}
-new_formula <- update(new_formula, . ~ . - X5589)
+new_formula <- update(new_formula, . ~ . - Y929)
 new_model <- glm(formula = new_formula, family = binomial, data = train_data)
 summary_model <- summary(new_model)
 
@@ -161,43 +175,7 @@ print(max(p_values))
 ```
 
 ```{r}
-new_formula <- update(new_formula, . ~ . - V5866)
-new_model <- glm(formula = new_formula, family = binomial, data = train_data)
-summary_model <- summary(new_model)
-
-p_values <- summary_model$coefficients[, "Pr(>|z|)"]
-max_p_value_index <- which.max(p_values)
-max_p_value_attribute <- names(p_values)[max_p_value_index]
-print(max_p_value_attribute)
-print(max(p_values))
-```
-
-```{r}
-new_formula <- update(new_formula, . ~ . - X496)
-new_model <- glm(formula = new_formula, family = binomial, data = train_data)
-summary_model <- summary(new_model)
-
-p_values <- summary_model$coefficients[, "Pr(>|z|)"]
-max_p_value_index <- which.max(p_values)
-max_p_value_attribute <- names(p_values)[max_p_value_index]
-print(max_p_value_attribute)
-print(max(p_values))
-```
-
-```{r}
-new_formula <- update(new_formula, . ~ . - X56400)
-new_model <- glm(formula = new_formula, family = binomial, data = train_data)
-summary_model <- summary(new_model)
-
-p_values <- summary_model$coefficients[, "Pr(>|z|)"]
-max_p_value_index <- which.max(p_values)
-max_p_value_attribute <- names(p_values)[max_p_value_index]
-print(max_p_value_attribute)
-print(max(p_values))
-```
-
-```{r}
-new_formula <- update(new_formula, . ~ . - V442)
+new_formula <- update(new_formula, . ~ . - Z9049)
 new_model <- glm(formula = new_formula, family = binomial, data = train_data)
 summary_model <- summary(new_model)
 
@@ -221,7 +199,31 @@ print(max(p_values))
 ```
 
 ```{r}
-new_formula <- update(new_formula, . ~ . - X56722)
+new_formula <- update(new_formula, . ~ . - V442)
+new_model <- glm(formula = new_formula, family = binomial, data = train_data)
+summary_model <- summary(new_model)
+
+p_values <- summary_model$coefficients[, "Pr(>|z|)"]
+max_p_value_index <- which.max(p_values)
+max_p_value_attribute <- names(p_values)[max_p_value_index]
+print(max_p_value_attribute)
+print(max(p_values))
+```
+
+```{r}
+new_formula <- update(new_formula, . ~ . - V1582)
+new_model <- glm(formula = new_formula, family = binomial, data = train_data)
+summary_model <- summary(new_model)
+
+p_values <- summary_model$coefficients[, "Pr(>|z|)"]
+max_p_value_index <- which.max(p_values)
+max_p_value_attribute <- names(p_values)[max_p_value_index]
+print(max_p_value_attribute)
+print(max(p_values))
+```
+
+```{r}
+new_formula <- update(new_formula, . ~ . - X73300)
 new_model <- glm(formula = new_formula, family = binomial, data = train_data)
 summary_model <- summary(new_model)
 
@@ -245,7 +247,7 @@ print(max(p_values))
 ```
 
 ```{r}
-new_formula <- update(new_formula, . ~ . - X99859)
+new_formula <- update(new_formula, . ~ . - X56722)
 new_model <- glm(formula = new_formula, family = binomial, data = train_data)
 summary_model <- summary(new_model)
 
@@ -257,7 +259,7 @@ print(max(p_values))
 ```
 
 ```{r}
-new_formula <- update(new_formula, . ~ . - X40390)
+new_formula <- update(new_formula, . ~ . - X99859)
 new_model <- glm(formula = new_formula, family = binomial, data = train_data)
 summary_model <- summary(new_model)
 
