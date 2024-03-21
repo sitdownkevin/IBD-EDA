@@ -9,8 +9,11 @@ output:
 # Load Dataset
 
 ```{r}
-X <- read.csv("./data/X__.csv", header = TRUE)
-y <- read.csv("./data/y__.csv", header = TRUE)
+library(dplyr)
+
+read.csv('../data/data_kept.csv') %>%
+  select(-c(subject_id, X, gender_F, language_.)) -> 
+  data
 ```
 
 # Cross Validation
@@ -23,7 +26,7 @@ library(randomForest)
 set.seed(123) # Set seed for reproducibility
 
 # Combine X and y into a single dataframe
-data <- cbind(X, y)
+# data <- cbind(X, y)
 
 # Perform 10-fold cross-validation
 num_folds <- 10
@@ -38,10 +41,10 @@ for (i in 1:num_folds) {
   train_data <- data[folds != i, ]
   test_data <- data[folds == i, ]
   
-  train_X <- as.matrix(train_data[, -ncol(train_data)])
+  train_X <- as.matrix(train_data[, 2:ncol(test_data)])
   train_y <- train_data[, ncol(train_data)]
-  test_X <- as.matrix(test_data[, -ncol(test_data)])
-  test_y <- test_data[, ncol(test_data)]
+  test_X <- as.matrix(test_data[, 2:ncol(test_data)])
+  test_y <- test_data[, 1]
 
   # Train the Bagged Tree model
   bagged_tree <- randomForest(train_X, train_y, ntree = 100)

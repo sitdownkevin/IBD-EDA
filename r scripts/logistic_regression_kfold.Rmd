@@ -9,15 +9,17 @@ output:
 # Load Dataset
 
 ```{r}
-X <- read.csv("./data/X__.csv", header = TRUE)
-y <- read.csv("./data/y__.csv", header = TRUE)
+library(dplyr)
+
+read.csv('../data/data_kept.csv') %>%
+  select(-c(subject_id, X, gender_F, language_.)) -> 
+  data
+
 ```
 
 # Initial Model
 ```{r}
-# new_formula <- dod ~ age + X25000 + X2761 + X2762 + X27800 + X2875 + X3051 + X311 + X32723 + X412 + X4280 + X51881 + X56089 + X5990 + X99592 + D649 + F419 + N179 + V1582
-
-new_formula <- dod ~ age0 + X25000 + X2761 + X2762 + X27800 + X2875 + X3051 + X311 + X32723 + X40390 + X412 + X4280 + X51881 + X56089 + X5990 + X99592 + D649 + K219 + N179
+new_formula <- dod ~ marital_status_MARRIED + race_BLACK + first_age + V1582 + X5990 + X3051 + X25000 + X2761 + X2762 + X56089 + X4280 + F419 + X40390 + V5866 + X56400 + X2875 + X5589 + X2639 + X99592 + V4986 + D649 + X51881 + X78659 + X412
 
 ```
 
@@ -27,10 +29,8 @@ new_formula <- dod ~ age0 + X25000 + X2761 + X2762 + X27800 + X2875 + X3051 + X3
 ## Logistic Regression
 
 ```{r}
-set.seed(123) # Set seed for reproducibility
+set.seed(314) # Set seed for reproducibility
 
-# Combine X and y into a single dataframe
-data <- cbind(X, y)
 
 # Perform 10-fold cross-validation
 num_folds <- 10
@@ -52,7 +52,7 @@ for (i in 1:num_folds) {
 
   # Append the predictions and actual values to the vectors
   all_predictions <- c(all_predictions, predictions)
-  all_actuals <- c(all_actuals, test_data[, ncol(test_data)])
+  all_actuals <- c(all_actuals, test_data[, 1])
 }
 
 ```

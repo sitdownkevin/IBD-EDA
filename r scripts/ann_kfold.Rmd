@@ -9,8 +9,11 @@ output:
 # Loading Data
 
 ```{r}
-X <- read.csv("./data/X__.csv", header = TRUE)
-y <- read.csv("./data/y__.csv", header = TRUE)
+library(dplyr)
+
+read.csv('../data/data_kept.csv') %>%
+  select(-c(subject_id, X, gender_F, language_.)) -> 
+  data
 ```
 
 # Cross Validation
@@ -23,7 +26,7 @@ library(neuralnet)
 set.seed(123) # Set seed for reproducibility
 
 # Combine X and y into a single dataframe
-data <- cbind(X, y)
+# data <- cbind(X, y)
 
 # Perform 10-fold cross-validation
 num_folds <- 10
@@ -44,15 +47,21 @@ for (i in 1:num_folds) {
   trained_model <- ann_model
   
   # Make predictions on the test set
-  predictions <- compute(trained_model, test_data[, -ncol(test_data)])$net.result
+  predictions <- compute(trained_model, test_data[,2:ncol(test_data)])$net.result
   
   # Append the predictions and actual values to the vectors
   all_predictions <- c(all_predictions, predictions)
-  all_actuals <- c(all_actuals, test_data[, ncol(test_data)])
+  all_actuals <- c(all_actuals, test_data[, 1])
 }
 ```
 
 ## Performance
+```{r}
+table(
+  as.numeric(all_actuals), as.numeric(ifelse(all_predictions > 0.5, 1, 0))
+)
+```
+
 
 ```{r}
 # Calculate performance metrics on the entire dataset
