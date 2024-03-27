@@ -10,3 +10,5 @@ scripts/__pycache__/
 r scripts/.RData
 r scripts/.ipynb_checkpoints/
 r scripts/r_example.R
+
+img/*
