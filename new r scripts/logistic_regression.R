@@ -2,26 +2,20 @@ setwd('~/GitHub/IBD-EDA')
 
 library(dplyr)
 
-read.csv('./data/data_kept.csv') %>%
-  select(-c(subject_id, X, gender_F, language_.)) -> 
-  data
+read.csv('./new r scripts/data.csv') %>%
+  select(-X) -> data
+
 
 data %>%
-  colnames() ->
-  variable_names
+  colnames() -> variable_names
   
 
-variable_names[variable_names != "dod"] ->
-  variable_names
-
-variable_names[variable_names != "dod"] ->
+variable_names[variable_names != "los"] ->
   variable_names
 
 
-as.formula(paste("dod ~", paste(variable_names, collapse = " + "))) ->
-  new_formula
-glm(formula = new_formula, family = binomial, data = data) ->
-  new_model
+as.formula(paste("los ~", paste(variable_names, collapse = " + "))) -> new_formula
+glm(formula = new_formula, family = binomial, data = data) -> new_model
 new_model %>%
   summary() -> summary_model
 summary_model$coefficients[, "Pr(>|z|)"] ->
@@ -33,9 +27,8 @@ while (max(p_values) > 0.05) {
   print(max_p_value_attribute)
   
   variable_names <- variable_names[variable_names != max_p_value_attribute]
-  new_formula <- as.formula(paste("dod ~", paste(variable_names, collapse = " + ")))
-  # new_formula <- update(new_formula, . ~ . - as.name(max_p_value_attribute))
-  
+  new_formula <- as.formula(paste("los ~", paste(variable_names, collapse = " + ")))
+
   new_model <- glm(formula = new_formula, family = binomial, data = data)
   summary_model <- summary(new_model)
   
