@@ -53,12 +53,12 @@ main <- function() {
   
   params <- list(
     objective = "reg:squarederror",
-    max_depth = 5,
-    min_child_weight = 3,
+    max_depth = 3,
+    min_child_weight = 2,
     eta = 0.05,
-    gamma = 0,
+    gamma = 0.1,
     subsample = 0.7,
-    colsample_bytree = 0.7
+    colsample_bytree = 0.8
   )
   train_and_evaluate(splits$train_data, splits$test_data, params)
 }
