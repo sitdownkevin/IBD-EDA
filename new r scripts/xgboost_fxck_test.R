@@ -8,6 +8,8 @@ library(performance)
 library(ggplot2)
 library(corrplot)
 library(DALEX)
+library(caret)
+
 
 
 # 加载和预处理数据
@@ -19,7 +21,7 @@ load_and_preprocess_data <- function(file_path) {
 
 # 分割数据集
 split_data <- function(data, train_ratio = 0.8) {
-  set.seed(123)
+  set.seed(1123)
   train_indices <- sample(1:nrow(data), size = floor(train_ratio * nrow(data)))
   train_data <- data[train_indices, ]
   test_data <- data[-train_indices, ]
@@ -35,15 +37,27 @@ train_and_evaluate <- function(train_data, test_data, params, nrounds = 50) {
                          print_every_n = 10, early_stopping_rounds = 10, 
                          eval_metric = "rmse", evals = list(validation = dtest))
   
+  
   # 使用测试集评估R²
   actuals_test <- test_data[,1]
   preds_test <- predict(final_model, newdata = as.matrix(test_data[,-1]))
   
+  results <- postResample(pred = preds_test, obs = actuals_test)
+  r2_value <- results[3]  # postResample返回的第三个值是R^2
+  print(paste("RMSE on Test Set: ", results[1]))
+  print(paste("MAE on Test Set: ", results[2]))
+  print(paste("R2 on Test Set: ", r2_value))
+  
   SST_test <- sum((actuals_test - mean(actuals_test))^2)
   SSR_test <- sum((preds_test - actuals_test)^2)
-  r2_value_test <- 1 - SSR_test/SST_test
-  
+  # r2_value_test <- 1 - SSR_test/SST_test
+  r2_value_test <- SSR_test / SST_test
+  # 
+  # # 计算测试集RMSE
+  # rmse_test <- sqrt(mean((preds_test - actuals_test)^2))
+  # 
   print(paste("R^2 Value on Test Set: ", r2_value_test))
+  # print(paste("RMSE on Test Set: ", rmse_test))
 }
 
 # 主函数

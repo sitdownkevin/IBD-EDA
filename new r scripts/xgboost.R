@@ -6,14 +6,14 @@ library(xgboost)
 library(Metrics)
 
 
-read.csv('./new r scripts/data.csv') %>%
+read.csv('./new r scripts/data_norm.csv') %>%
   select(-X) -> data
 
 data %>% str
 
 
 # Perform 10-fold cross-validation
-num_folds <- 8
+num_folds <- 10
 folds <- cut(seq(1, nrow(data)), breaks = num_folds, labels = FALSE)
 
 # Create empty vectors to store the predictions and actual values
@@ -68,9 +68,10 @@ for (i in 1:num_folds) {
   
   
   mse <- mse(test_y, predictions)
-  rmse <- sqrt(mse)  # 或者直接使用 rmse(all_actuals, all_predictions)
+  rmse <- sqrt(mse)  # 或者直接使用 
+  # rmse <- rmse(all_actuals, all_predictions)
   mae <- mae(test_y, predictions)
-  r_squared <- cor(test_y, predictions) ^ 2
+  r_squared <- cor(test_y, predictions)^2
   
   print(paste("MSE: ", mse))
   print(paste("RMSE: ", rmse))
