@@ -10,7 +10,8 @@ output:
 
 ```{r}
 rm(list=ls(all=TRUE))
-setwd('~/GitHub/IBD-EDA/aes/')
+# setwd('~/GitHub/IBD-EDA/aes/')
+setwd('E:/Project/IBD-EDA/aes/')
 ```
 
 ```{r, echo=FALSE}
