@@ -26,7 +26,7 @@ library(caret)
 # Loading Data
 
 ```{r}
-data <- read.csv('./data_processed/data_log.csv') %>%
+data <- read.csv('./data_processed/data.csv') %>%
   select(-X)
 ```
 
@@ -47,6 +47,40 @@ dtrain <- xgb.DMatrix(
 dtest <- xgb.DMatrix(
   data = as.matrix(test_data[,-1]), label = test_data[,1]
 )
+
+```
+
+# Find Parameters
+
+```{r}
+grid <- expand.grid(
+  nrounds = c(50, 100, 150), # 添加nrounds参数
+  max_depth = c(3, 4, 5, 6),
+  min_child_weight = c(1, 2, 3),
+  eta = c(0.05, 0.1, 0.3),
+  gamma = c(0, 0.1, 0.2),
+  subsample = c(0.7, 0.8, 0.9),
+  colsample_bytree = c(0.7, 0.8, 0.9)
+)
+
+# 训练控制
+trainControl <- trainControl(
+  method = "cv", 
+  number = 5,
+  allowParallel = TRUE, # 允许并行处理
+  verboseIter = FALSE # 减少训练过程中的输出，使输出更清晰
+)
+
+# 训练模型
+model <- train(
+  x = as.matrix(train_data[,-1]), y = train_data[,1],
+  method = "xgbTree",
+  trControl = trainControl,
+  tuneGrid = grid,
+  metric = "RMSE"
+)
+
+print(model$bestTune)
 
 ```
 
