@@ -32,7 +32,7 @@ data <- read.csv('./data_processed/data.csv') %>%
 ```
 
 ```{r}
-set.seed(123)
+set.seed(1123)
 train_ratio = 0.8
 
 train_indices <- sample(1:nrow(data), size = floor(train_ratio * nrow(data)))
@@ -48,40 +48,6 @@ dtrain <- xgb.DMatrix(
 dtest <- xgb.DMatrix(
   data = as.matrix(test_data[,-1]), label = test_data[,1]
 )
-
-```
-
-# Find Parameters
-
-```{r}
-grid <- expand.grid(
-  nrounds = c(50, 100, 150), # 添加nrounds参数
-  max_depth = c(3, 4, 5, 6),
-  min_child_weight = c(1, 2, 3),
-  eta = c(0.05, 0.1, 0.3),
-  gamma = c(0, 0.1, 0.2),
-  subsample = c(0.7, 0.8, 0.9),
-  colsample_bytree = c(0.7, 0.8, 0.9)
-)
-
-# 训练控制
-trainControl <- trainControl(
-  method = "cv", 
-  number = 5,
-  allowParallel = TRUE, # 允许并行处理
-  verboseIter = FALSE # 减少训练过程中的输出，使输出更清晰
-)
-
-# 训练模型
-model <- train(
-  x = as.matrix(train_data[,-1]), y = train_data[,1],
-  method = "xgbTree",
-  trControl = trainControl,
-  tuneGrid = grid,
-  metric = "RMSE"
-)
-
-print(model$bestTune)
 
 ```
 
@@ -104,7 +70,7 @@ final_model <- xgboost(
   params = params, 
   nrounds = nrounds, 
   print_every_n = 10, 
-  early_stopping_rounds = 10, 
+  early_stopping_rounds = 1000, 
   eval_metric = "rmse", 
   evals = list(validation = dtest)
 )
@@ -119,10 +85,14 @@ preds_test <- predict(final_model, newdata = as.matrix(test_data[,-1]))
 
 results <- postResample(pred = preds_test, obs = actuals_test)
 
-print(paste("RMSE on Test Set: ", results[1]))
-print(paste("MAE on Test Set: ", results[2]))
-print(paste("R2 on Test Set: ", results[3]))
+print(results)
 
+```
+```{r}
+SSR <- sum((actuals_test - preds_test)^2)
+SST <- sum((actuals_test - mean(actuals_test))^2)
+
+1 - (SSR / SST)
 ```
 
 # Model Results
