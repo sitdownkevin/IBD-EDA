@@ -8341,31 +8341,81 @@ See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stab
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [12]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In [22]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
-<div class="highlight hl-ipython3"><pre><span></span><span class="c1"># # 处理 dummy variables</span>
-<span class="c1"># cols = ['language', 'race', 'marital_status', 'insurance']</span>
+<div class="highlight hl-ipython3"><pre><span></span><span class="c1"># 处理 dummy variables</span>
+<span class="n">cols</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'language'</span><span class="p">,</span> <span class="s1">'race'</span><span class="p">,</span> <span class="s1">'marital_status'</span><span class="p">,</span> <span class="s1">'insurance'</span><span class="p">]</span>
 
-<span class="c1"># for col in cols:</span>
-<span class="c1">#     tmp = data[col].value_counts()</span>
-<span class="c1">#     res = pd.DataFrame({'index': tmp.index, 'count': tmp.values, 'percentage': tmp.values/tmp.sum()*100})</span>
-<span class="c1">#     print(f'{res.set_index("index")}')</span>
-<span class="c1">#     print()</span>
+<span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">cols</span><span class="p">:</span>
+    <span class="n">tmp</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span>
+    <span class="n">res</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s1">'index'</span><span class="p">:</span> <span class="n">tmp</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="s1">'count'</span><span class="p">:</span> <span class="n">tmp</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="s1">'percentage'</span><span class="p">:</span> <span class="n">tmp</span><span class="o">.</span><span class="n">values</span><span class="o">/</span><span class="n">tmp</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="o">*</span><span class="mi">100</span><span class="p">})</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">res</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s2">"index"</span><span class="p">)</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">()</span>
     
 
-<span class="c1"># data = pd.get_dummies(data=data, </span>
-<span class="c1">#                       columns=cols, </span>
-<span class="c1">#                       prefix=cols, </span>
-<span class="c1">#                       drop_first=True)</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">get_dummies</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">,</span> 
+                      <span class="n">columns</span><span class="o">=</span><span class="n">cols</span><span class="p">,</span> 
+                      <span class="n">prefix</span><span class="o">=</span><span class="n">cols</span><span class="p">,</span> 
+                      <span class="n">drop_first</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
-<span class="c1"># data.columns</span>
+<span class="n">data</span><span class="o">.</span><span class="n">columns</span>
 </pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell-outputWrapper">
+<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+</div>
+<div class="jp-OutputArea jp-Cell-outputArea">
+<div class="jp-OutputArea-child">
+<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
+<pre>         count  percentage
+index                     
+ENGLISH    623   95.552147
+?           29    4.447853
+
+                 count  percentage
+index                             
+WHITE              534   81.901840
+OTHER               53    8.128834
+BLACK               45    6.901840
+HISPANIC/LATINO     15    2.300613
+ASIAN                5    0.766871
+
+          count  percentage
+index                      
+MARRIED     303    47.34375
+SINGLE      213    33.28125
+WIDOWED      79    12.34375
+DIVORCED     45     7.03125
+
+          count  percentage
+index                      
+Other       327   50.153374
+Medicare    287   44.018405
+Medicaid     38    5.828221
+
+</pre>
+</div>
+</div>
+<div class="jp-OutputArea-child jp-OutputArea-executeResult">
+<div class="jp-OutputPrompt jp-OutputArea-prompt">Out[22]:</div>
+<div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain" tabindex="0">
+<pre>Index(['los', 'mortality', 'gender', 'age', 'heart_rate', 'respiratory_rate',
+       'hematocrit', 'rdw', 'platelet', 'mcv', 'mch', 'hemoglobin', 'uc_only',
+       'cd_only', 'language_ENGLISH', 'race_BLACK', 'race_HISPANIC/LATINO',
+       'race_OTHER', 'race_WHITE', 'marital_status_MARRIED',
+       'marital_status_SINGLE', 'marital_status_WIDOWED', 'insurance_Medicare',
+       'insurance_Other'],
+      dtype='object')</pre>
 </div>
 </div>
 </div>
@@ -8386,16 +8436,16 @@ See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stab
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [13]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In [23]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
-<div class="highlight hl-ipython3"><pre><span></span><span class="c1"># cols = ['age', 'heart_rate', 'respiratory_rate', 'hematocrit', 'rdw', 'platelet', 'mcv', 'mch', 'hemoglobin',]</span>
+<div class="highlight hl-ipython3"><pre><span></span><span class="n">cols</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'age'</span><span class="p">,</span> <span class="s1">'heart_rate'</span><span class="p">,</span> <span class="s1">'respiratory_rate'</span><span class="p">,</span> <span class="s1">'hematocrit'</span><span class="p">,</span> <span class="s1">'rdw'</span><span class="p">,</span> <span class="s1">'platelet'</span><span class="p">,</span> <span class="s1">'mcv'</span><span class="p">,</span> <span class="s1">'mch'</span><span class="p">,</span> <span class="s1">'hemoglobin'</span><span class="p">,]</span>
 
-<span class="c1"># scaler = StandardScaler()</span>
+<span class="n">scaler</span> <span class="o">=</span> <span class="n">StandardScaler</span><span class="p">()</span>
 
-<span class="c1"># scaler = MinMaxScaler()</span>
+<span class="n">scaler</span> <span class="o">=</span> <span class="n">MinMaxScaler</span><span class="p">()</span>
 
-<span class="c1"># data[cols] = scaler.fit_transform(data[cols])</span>
+<span class="n">data</span><span class="p">[</span><span class="n">cols</span><span class="p">]</span> <span class="o">=</span> <span class="n">scaler</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">cols</span><span class="p">])</span>
 </pre></div>
 </div>
 </div>
@@ -8406,13 +8456,13 @@ See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stab
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [14]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In [24]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-ipython3"><pre><span></span><span class="c1"># 转换所有 bool 类型为 int</span>
-<span class="c1"># for k, v in data.dtypes.items():</span>
-<span class="c1">#     if v == bool:</span>
-<span class="c1">#         data.loc[:, k] = data.loc[:, k].astype(int)</span>
+<span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">data</span><span class="o">.</span><span class="n">dtypes</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+    <span class="k">if</span> <span class="n">v</span> <span class="o">==</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="n">data</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="n">k</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -8434,12 +8484,12 @@ See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stab
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [15]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In [26]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-ipython3"><pre><span></span><span class="c1">## data['los'] = np.log(data['los'] + 1)</span>
 
-<span class="c1"># data.to_csv('./data.csv')</span>
+<span class="n">data</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s1">'./data_norm_dod.csv'</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
