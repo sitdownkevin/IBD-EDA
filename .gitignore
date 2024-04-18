@@ -12,3 +12,5 @@ r scripts/.ipynb_checkpoints/
 r scripts/r_example.R
 
 img/*
+
+.ipynb_checkpoints/*
