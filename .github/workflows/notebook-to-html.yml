@@ -28,7 +28,7 @@ jobs:
       - name: Convert notebooks to HTML
         run: |
           mkdir -p docs
-          find aes -name "*.ipynb" | while read notebook; do
+          find aes --maxdepth 2 -name "*.ipynb" | while read notebook; do
             jupyter nbconvert --to html "$notebook" --output-dir docs
           done
           
