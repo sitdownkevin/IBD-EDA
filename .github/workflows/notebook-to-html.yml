@@ -1,0 +1,40 @@
+name: Convert Jupyter Notebooks to HTML
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  convert-notebook:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.x'
+      
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install nbconvert
+          
+      - name: Convert notebooks to HTML
+        run: |
+          mkdir -p docs
+          find aes -name "*.ipynb" | while read notebook; do
+            jupyter nbconvert --to html "$notebook" --output-dir docs
+          done
+          
+      - name: Commit files
+        uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: Convert Jupyter Notebooks to HTML
+          file_pattern: docs/*.html
+          branch: main
