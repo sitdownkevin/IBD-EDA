@@ -1,0 +1,219 @@
+---
+title: "XGBoost"
+output: 
+  html_notebook: 
+    toc: true
+    theme: cosmo
+---
+
+# Setting
+
+```{r}
+rm(list=ls(all=TRUE))
+setwd('C:/Users/sitdo/Documents/GitHub/IBD-EDA/paper1/')
+```
+
+# Loading Data
+
+```{r}
+library(dplyr)
+
+data <- read.csv("./data_preprocessed/data.csv") %>% select(-1)
+```
+
+# Installing Packages
+
+```{r}
+library(xgboost)
+```
+
+# Method I: Splitting Data
+
+```{r}
+set.seed(123)
+splitting_ratio <- 0.7
+
+indices <- 1:nrow(data)
+shuffled_indices <- sample(indices) 
+train_size <- floor(splitting_ratio * length(indices))
+
+train_indices <- shuffled_indices[1:train_size]
+test_indices <- shuffled_indices[(train_size + 1):length(indices)]
+
+train_data <- data[train_indices, ]
+test_data <- data[test_indices, ]
+```
+
+Format for XGBoost
+
+```{r}
+train_X <- as.matrix(train_data[, -1])
+train_y <- train_data[, 1]
+dtrain <- xgb.DMatrix(data = train_X, label = train_y)
+
+test_X <- as.matrix(test_data[, -1])
+test_y <- test_data[, 1]
+dtest <- xgb.DMatrix(data = test_X, label = test_y)
+```
+
+## Building Model
+
+```{r}
+xgb_model <- xgboost(data = dtrain, nrounds = 10, objective = "binary:logistic")
+
+predictions <- predict(xgb_model, dtest)
+```
+
+## Performance
+
+### Confusion Matrix
+
+```{r}
+confusion_matrix <- table(
+  as.numeric(test_data$dod), as.numeric(ifelse(predictions > 0.5, 1, 0))
+)
+
+TP <- confusion_matrix[1, 1]
+TN <- confusion_matrix[2, 2]
+FP <- confusion_matrix[2, 1]
+FN <- confusion_matrix[1, 2]
+
+## Calculate Accuracy
+accuracy <- (TP + TN) / (TP + FP + TN + FN)
+cat("Accuracy:", accuracy, "\n")
+
+## Calculate Recall
+recall <- TP / (TP + FN)
+cat("Recall:", recall, "\n")
+
+## Calculate Precision
+precision <- TP / (TP + FP)
+cat("Precision:", precision, "\n")
+
+## Calculate Specificity
+specificity <- TN / (TN + FP)
+cat("Specificity:", specificity, "\n")
+
+## Calculate F1 Score
+f1_score <- 2 * (precision * recall) / (precision + recall)
+cat("F1 Score:", f1_score, "\n")
+```
+
+### ROC Curve
+
+```{r}
+library(pROC)
+# Calculate ROC curve using the actual values and predictions
+roc_obj <- roc(
+  as.numeric(test_data$dod), predictions
+)
+
+# Plot the ROC curve
+plot(
+  roc_obj,
+  col = "blue",
+  main = "ROC Curve - XGBoost",
+  legacy.axes = TRUE,
+  print.auc = TRUE,
+  print.thres = TRUE,
+  grid = c(0.2, 0.2),
+  grid.col = c("green", "orange")
+)
+```
+
+# Method II: Cross Validation
+
+```{r}
+# Perform 10-fold cross-validation
+num_folds <- 10
+folds <- cut(seq(1, nrow(data)), breaks = num_folds, labels = FALSE)
+
+# Create empty vectors to store the predictions and actual values
+all_predictions <- vector()
+all_actuals <- vector()
+
+for (i in 1:num_folds) {
+  # Split the data into training and test sets for the current fold
+  train_data <- data[folds != i, ]
+  test_data <- data[folds == i, ]
+  
+  train_X <- as.matrix(train_data[, -1])
+  train_y <- train_data[, 1]
+  dtrain <- xgb.DMatrix(data = train_X, label = train_y)
+  
+  test_X <- as.matrix(test_data[, -1])
+  test_y <- test_data[, 1]
+  dtest <- xgb.DMatrix(data = test_X, label = test_y)
+
+  # Train the XGBoost model
+  xgb_model <- xgboost(data = dtrain, 
+                       nrounds = 10, 
+                       objective = "binary:logistic")
+  
+  # Make predictions on the test set
+  predictions <- predict(xgb_model, dtest)
+  
+  # Append the predictions and actual values to the vectors
+  all_predictions <- c(all_predictions, predictions)
+  all_actuals <- c(all_actuals, test_y)
+}
+
+```
+
+## Performance
+
+### Confusion Matrix
+
+```{r}
+confusion_matrix <- table(
+  as.numeric(all_actuals), 
+  as.numeric(ifelse(all_predictions > 0.5, 1, 0))
+)
+
+TP <- confusion_matrix[1, 1]
+TN <- confusion_matrix[2, 2]
+FP <- confusion_matrix[2, 1]
+FN <- confusion_matrix[1, 2]
+
+## Calculate Accuracy
+accuracy <- (TP + TN) / (TP + FP + TN + FN)
+cat("Accuracy:", accuracy, "\n")
+
+## Calculate Recall
+recall <- TP / (TP + FN)
+cat("Recall:", recall, "\n")
+
+## Calculate Precision
+precision <- TP / (TP + FP)
+cat("Precision:", precision, "\n")
+
+## Calculate Specificity
+specificity <- TN / (TN + FP)
+cat("Specificity:", specificity, "\n")
+
+## Calculate F1 Score
+f1_score <- 2 * (precision * recall) / (precision + recall)
+cat("F1 Score:", f1_score, "\n")
+
+```
+
+### ROC Curve
+
+```{r}
+# Calculate ROC curve using the actual values and predictions
+roc_obj <- roc(
+  as.numeric(all_actuals), all_predictions
+)
+
+# Plot the ROC curve
+plot(
+  roc_obj,
+  col = "blue",
+  main = "ROC Curve - XGBoost (Cross Validation)",
+  legacy.axes = TRUE,
+  print.auc = TRUE,
+  print.thres = TRUE,
+  grid = c(0.2, 0.2),
+  grid.col = c("green", "orange")
+)
+```

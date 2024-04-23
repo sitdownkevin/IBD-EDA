@@ -1,0 +1,459 @@
+---
+title: "LR"
+output: 
+  html_notebook: 
+    toc: true
+    theme: cosmo
+---
+
+# Setting
+
+```{r}
+rm(list=ls(all=TRUE))
+setwd('C:/Users/sitdo/Documents/GitHub/IBD-EDA/paper1/')
+```
+
+# Loading Data
+
+```{r}
+library(dplyr)
+
+data <- read.csv("./data_preprocessed/data.csv") %>% select(-1)
+```
+
+
+# Installing Packages
+
+```{r}
+library(MASS)
+library(caret)
+```
+
+# Without Selection
+
+Building Formula
+
+```{r}
+variables <- setdiff(names(data), "dod")
+
+variables_str <- paste(variables, collapse = " + ")
+formula_str <- paste("dod ~", variables_str)
+
+formula <- as.formula(formula_str)
+```
+
+## Method I: Splitting Data
+
+```{r}
+set.seed(123)
+splitting_ratio <- 0.7
+
+indices <- 1:nrow(data)
+shuffled_indices <- sample(indices) 
+train_size <- floor(splitting_ratio * length(indices))
+
+train_indices <- shuffled_indices[1:train_size]
+test_indices <- shuffled_indices[(train_size + 1):length(indices)]
+
+train_data <- data[train_indices, ]
+test_data <- data[test_indices, ]
+```
+
+
+
+```{r}
+model <- glm(formula = formula, 
+             family = binomial, 
+             data = train_data)
+
+summary_model <- summary(model)
+print(summary_model)
+```
+
+### Performance
+
+```{r}
+predictions <- predict(model, test_data, type="response")
+```
+
+#### Confusion Matrix
+
+```{r}
+confusion_matrix <- table(
+  as.numeric(test_data$dod), as.numeric(ifelse(predictions > 0.5, 1, 0))
+)
+
+TP <- confusion_matrix[1, 1]
+TN <- confusion_matrix[2, 2]
+FP <- confusion_matrix[2, 1]
+FN <- confusion_matrix[1, 2]
+
+## Calculate Accuracy
+accuracy <- (TP + TN) / (TP + FP + TN + FN)
+cat("Accuracy:", accuracy, "\n")
+
+## Calculate Recall
+recall <- TP / (TP + FN)
+cat("Recall:", recall, "\n")
+
+## Calculate Precision
+precision <- TP / (TP + FP)
+cat("Precision:", precision, "\n")
+
+## Calculate Specificity
+specificity <- TN / (TN + FP)
+cat("Specificity:", specificity, "\n")
+
+## Calculate F1 Score
+f1_score <- 2 * (precision * recall) / (precision + recall)
+cat("F1 Score:", f1_score, "\n")
+```
+
+#### ROC Curve
+
+```{r}
+library(pROC)
+# Calculate ROC curve using the actual values and predictions
+roc_obj <- roc(
+  as.numeric(test_data$dod), predictions
+)
+
+# Plot the ROC curve
+plot(
+  roc_obj,
+  col = "blue",
+  main = "ROC Curve - Logistic Regression",
+  legacy.axes = TRUE,
+  print.auc = TRUE,
+  print.thres = TRUE,
+  grid = c(0.2, 0.2),
+  grid.col = c("green", "orange")
+)
+```
+
+## Method II: Cross Validation
+
+```{r}
+# Perform 10-fold cross-validation
+num_folds <- 10
+
+folds <- cut(seq(1, nrow(data)), breaks = num_folds, labels = FALSE)
+
+# Create empty vectors to store the predictions and actual values
+all_predictions <- vector()
+all_actuals <- vector()
+
+for (i in 1:num_folds) {
+  # Split the data into training and test sets for the current fold
+  train_data <- data[folds != i, ]
+  test_data <- data[folds == i, ]
+  
+  # Logistic Regression
+  model <- glm(formula = formula, family = binomial, data = train_data)
+
+  predictions <- predict(model, test_data, type="response")
+
+  # Append the predictions and actual values to the vectors
+  all_predictions <- c(all_predictions, predictions)
+  all_actuals <- c(all_actuals, test_data$dod)
+}
+
+```
+
+### Performance
+
+#### Confusion Matrix
+
+```{r}
+confusion_matrix <- table(
+  as.numeric(all_actuals), as.numeric(ifelse(all_predictions > 0.5, 1, 0))
+)
+
+TP <- confusion_matrix[1, 1]
+TN <- confusion_matrix[2, 2]
+FP <- confusion_matrix[2, 1]
+FN <- confusion_matrix[1, 2]
+
+## Calculate Accuracy
+accuracy <- (TP + TN) / (TP + FP + TN + FN)
+cat("Accuracy:", accuracy, "\n")
+
+## Calculate Recall
+recall <- TP / (TP + FN)
+cat("Recall:", recall, "\n")
+
+## Calculate Precision
+precision <- TP / (TP + FP)
+cat("Precision:", precision, "\n")
+
+## Calculate Specificity
+specificity <- TN / (TN + FP)
+cat("Specificity:", specificity, "\n")
+
+## Calculate F1 Score
+f1_score <- 2 * (precision * recall) / (precision + recall)
+cat("F1 Score:", f1_score, "\n")
+```
+
+#### ROC Curve
+
+```{r}
+# Calculate ROC curve using the actual values and predictions
+roc_obj <- roc(
+  as.numeric(all_actuals), all_predictions
+)
+
+# Plot the ROC curve
+plot(
+  roc_obj,
+  col = "blue",
+  main = "ROC Curve - Logistic Regression (Cross Validation)",
+  legacy.axes = TRUE,
+  print.auc = TRUE,
+  print.thres = TRUE,
+  grid = c(0.2, 0.2),
+  grid.col = c("green", "orange")
+)
+```
+
+# With Selecting
+
+## Method I: Splitting Data
+
+```{r}
+splitting_ratio <- 0.7
+
+indices <- 1:nrow(data)
+shuffled_indices <- sample(indices) 
+train_size <- floor(splitting_ratio * length(indices))
+
+train_indices <- shuffled_indices[1:train_size]
+test_indices <- shuffled_indices[(train_size + 1):length(indices)]
+
+train_data <- data[train_indices, ]
+test_data <- data[test_indices, ]
+```
+
+Building Formula
+
+```{r}
+removed_variables <- c()
+
+variables <- setdiff(names(data), "dod")
+
+formula_str <- paste("dod ~", paste(variables, collapse = " + "))
+
+new_formula <- as.formula(formula_str)
+```
+
+AIC Step
+
+```{r}
+p_value_threshold <- 0.05
+
+repeat {
+  new_model <- glm(
+    formula = new_formula,
+    family = binomial,
+    data = train_data
+  )
+  
+  summary_model <- summary(new_model)
+
+  p_values <- summary_model$coefficients[, "Pr(>|z|)"]
+  
+  max_p_value <- max(p_values)
+  max_p_value_attribute <- names(which.max(p_values))
+  
+  # 检查最大P值是否超过阈值
+  if (max_p_value > p_value_threshold) {
+      # 如果超过阈值，从公式中移除该变量并继续循环
+      print(max_p_value_attribute)
+    
+      removed_variables <- c(removed_variables, max_p_value_attribute)
+      
+      variables <- setdiff(names(train_data), c("dod", removed_variables))
+      
+      formula_str <- paste("dod ~", paste(variables, collapse = " + "))
+      
+      new_formula <- as.formula(formula_str)
+  } else {
+      # 如果所有变量的P值都不超过阈值，则停止循环
+      break
+  }
+}
+
+```
+
+## Final Model
+
+```{r}
+print(new_formula)
+```
+
+```{r}
+final_model <- glm(
+  formula = new_formula,
+  family = binomial,
+  data = train_data
+)
+
+summary_model <- summary(final_model)
+print(summary_model)
+```
+
+### Performance
+
+```{r}
+predictions <- predict(final_model, test_data, type="response")
+```
+
+#### Confusion Matrix
+
+```{r}
+confusion_matrix <- table(
+  as.numeric(test_data$dod), as.numeric(ifelse(predictions > 0.5, 1, 0))
+)
+
+TP <- confusion_matrix[1, 1]
+TN <- confusion_matrix[2, 2]
+FP <- confusion_matrix[2, 1]
+FN <- confusion_matrix[1, 2]
+
+## Calculate Accuracy
+accuracy <- (TP + TN) / (TP + FP + TN + FN)
+cat("Accuracy:", accuracy, "\n")
+
+## Calculate Recall
+recall <- TP / (TP + FN)
+cat("Recall:", recall, "\n")
+
+## Calculate Precision
+precision <- TP / (TP + FP)
+cat("Precision:", precision, "\n")
+
+## Calculate Specificity
+specificity <- TN / (TN + FP)
+cat("Specificity:", specificity, "\n")
+
+## Calculate F1 Score
+f1_score <- 2 * (precision * recall) / (precision + recall)
+cat("F1 Score:", f1_score, "\n")
+```
+
+#### ROC Curve
+
+```{r}
+library(pROC)
+# Calculate ROC curve using the actual values and predictions
+roc_obj <- roc(
+  as.numeric(test_data$dod), predictions
+)
+
+# Plot the ROC curve
+plot(
+  roc_obj,
+  col = "blue",
+  main = "ROC Curve - Logistic Regression",
+  legacy.axes = TRUE,
+  print.auc = TRUE,
+  print.thres = TRUE,
+  grid = c(0.2, 0.2),
+  grid.col = c("green", "orange")
+)
+```
+
+#### CI
+
+```{r}
+ci <- confint(final_model)
+exp(cbind(OR <- coef(final_model), ci))
+```
+
+## Method II: Cross Validation
+
+```{r}
+# Perform 10-fold cross-validation
+num_folds <- 10
+
+folds <- cut(seq(1, nrow(data)), breaks = num_folds, labels = FALSE)
+```
+
+```{r}
+# Create empty vectors to store the predictions and actual values
+all_predictions <- vector()
+all_actuals <- vector()
+
+for (i in 1:num_folds) {
+  # Split the data into training and test sets for the current fold
+  train_data <- data[folds != i, ]
+  test_data <- data[folds == i, ]
+  
+  # Logistic Regression
+  model <- glm(formula = new_formula, 
+               family = binomial, 
+               data = train_data)
+
+  predictions <- predict(model, test_data, type="response")
+
+  # Append the predictions and actual values to the vectors
+  all_predictions <- c(all_predictions, predictions)
+  all_actuals <- c(all_actuals, test_data$dod)
+}
+```
+
+### Performance
+
+#### Confusion Matrix
+
+```{r}
+confusion_matrix <- table(
+  as.numeric(all_actuals), as.numeric(ifelse(all_predictions > 0.5, 1, 0))
+)
+
+TP <- confusion_matrix[1, 1]
+TN <- confusion_matrix[2, 2]
+FP <- confusion_matrix[2, 1]
+FN <- confusion_matrix[1, 2]
+
+## Calculate Accuracy
+accuracy <- (TP + TN) / (TP + FP + TN + FN)
+cat("Accuracy:", accuracy, "\n")
+
+## Calculate Recall
+recall <- TP / (TP + FN)
+cat("Recall:", recall, "\n")
+
+## Calculate Precision
+precision <- TP / (TP + FP)
+cat("Precision:", precision, "\n")
+
+## Calculate Specificity
+specificity <- TN / (TN + FP)
+cat("Specificity:", specificity, "\n")
+
+## Calculate F1 Score
+f1_score <- 2 * (precision * recall) / (precision + recall)
+cat("F1 Score:", f1_score, "\n")
+```
+
+#### ROC Curve
+
+```{r}
+# Calculate ROC curve using the actual values and predictions
+roc_obj <- roc(
+  as.numeric(all_actuals), all_predictions
+)
+
+# Plot the ROC curve
+plot(
+  roc_obj,
+  col = "blue",
+  main = "ROC Curve - Logistic Regression (Cross Validation)",
+  legacy.axes = TRUE,
+  print.auc = TRUE,
+  print.thres = TRUE,
+  grid = c(0.2, 0.2),
+  grid.col = c("green", "orange")
+)
+```
