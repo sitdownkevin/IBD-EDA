@@ -237,9 +237,9 @@ test_data <- data[test_indices, ]
 Building Formula
 
 ```{r}
-removed_variables <- c()
+removed_variables <- c("anchor_age")
 
-variables <- setdiff(names(data), "dod")
+variables <- setdiff(names(data), c("dod", removed_variables))
 
 formula_str <- paste("dod ~", paste(variables, collapse = " + "))
 
