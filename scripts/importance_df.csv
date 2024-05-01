@@ -1,0 +1,38 @@
+index,Importance
+Acute respiratory failure,0.104727685
+marital_status_WIDOWED,0.05044024
+Thrombocytopenia,0.047066603
+Congestive heart failure,0.04389627
+Hyposmolality and/or hyponatremia,0.03999543
+Urinary tract infection,0.038375486
+Severe sepsis,0.03626115
+respiratory_rate,0.035983842
+gender,0.03208752
+heart_rate,0.031304233
+hemoglobin,0.03085303
+race_HISPANIC/LATINO,0.029990256
+Personal history of tobacco use,0.02986711
+mch,0.029393788
+platelet,0.028025411
+insurance_Medicare,0.027732123
+Other finger(s) amputation status,0.027666537
+rdw,0.027186956
+hematocrit,0.026548877
+cd_only,0.026490098
+mcv,0.025914678
+Tachycardia,0.025605502
+marital_status_MARRIED,0.025234148
+marital_status_SINGLE,0.024943566
+age,0.024334408
+language_ENGLISH,0.023957545
+Essential (primary) hypertension,0.022721304
+Tobacco use disorder,0.022411866
+insurance_Other,0.020233601
+Acute kidney failure,0.020142896
+Diabetes mellitus,0.011679973
+uc_only,0.008927863
+Other specified intestinal obstruction,0.0
+race_WHITE,0.0
+Anemia,0.0
+race_OTHER,0.0
+race_BLACK,0.0
