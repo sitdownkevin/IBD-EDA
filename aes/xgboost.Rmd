@@ -1,0 +1,80 @@
+---
+title: "xgboost"
+output: 
+  html_notebook: 
+    toc: true
+    theme: cosmo
+---
+
+```{r}
+rm(list=ls(all=TRUE))
+setwd('C:/Users/sitdo/Documents/GitHub/IBD-EDA/aes/')
+```
+
+# Installing Packages
+
+```{r, message=FALSE, warning=FALSE}
+library(xgboost)
+library(caret)
+library(pROC)
+library(dplyr)
+```
+
+# Reading Data
+
+```{r}
+read.csv('data_processed/data_first_record_with_commorbidities.csv') %>%
+  select(-X) %>%
+  mutate(los = if_else(los >= 3, 1, 0)) ->
+  df
+```
+
+```{r}
+set.seed(123)
+
+trainIndex <- createDataPartition(df$los, p = .8, 
+                                  list = FALSE, 
+                                  times = 1)
+trainData <- df[trainIndex,]
+testData <- df[-trainIndex,]
+
+# 准备训练和测试数据
+trainX <- data.matrix(trainData[, -which(names(trainData) == "los")])
+trainY <- trainData$los
+trainY <- factor(trainY, levels = c("0", "1"))
+testX <- data.matrix(testData[, -which(names(testData) == "los")])
+testY <- testData$los
+testY <- factor(testY, levels = c("0", "1"))
+
+```
+
+# Grid Search
+
+```{r}
+grid <- expand.grid(nrounds = 100,
+                    max_depth = c(3, 6, 9),
+                    eta = c(0.01, 0.05, 0.1),
+                    gamma = 0,
+                    colsample_bytree = 0.6,
+                    min_child_weight = 1,
+                    subsample = 0.8)
+
+```
+
+使用caret包进行网格搜索
+
+```{r}
+trainControl <- trainControl(method = "cv", number = 5)
+model <- train(x = trainX, y = trainY, 
+               method = "xgbTree", 
+               trControl = trainControl, 
+               tuneGrid = grid,
+               metric = "Accuracy")
+```
+
+# Evaluation
+
+```{r}
+pred <- predict(model, testX)
+confusionMatrix(pred, testY)
+```
