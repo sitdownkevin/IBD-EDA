@@ -7514,7 +7514,7 @@ a.anchor-link {
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [1]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In [6]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
@@ -7529,7 +7529,7 @@ a.anchor-link {
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [2]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In [7]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-ipython3"><pre><span></span><span class="n">admissions</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">'./data/admissions_ibd.csv'</span><span class="p">)</span>
@@ -7544,7 +7544,7 @@ a.anchor-link {
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [3]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In [8]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-ipython3"><pre><span></span><span class="n">icd_codes</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'V1582'</span><span class="p">,</span> <span class="s1">'5849'</span><span class="p">,</span> <span class="s1">'5990'</span><span class="p">,</span> <span class="s1">'3051'</span><span class="p">,</span> <span class="s1">'2761'</span><span class="p">,</span> <span class="s1">'25000'</span><span class="p">,</span> <span class="s1">'I10'</span><span class="p">,</span> <span class="s1">'56089'</span><span class="p">,</span> <span class="s1">'4280'</span><span class="p">,</span> <span class="s1">'5866'</span><span class="p">,</span> <span class="s1">'2875'</span><span class="p">,</span> <span class="s1">'496'</span><span class="p">,</span> <span class="s1">'99592'</span><span class="p">,</span> <span class="s1">'D649'</span><span class="p">,</span> <span class="s1">'7850'</span><span class="p">,</span> <span class="s1">'51881'</span><span class="p">]</span>
@@ -7568,7 +7568,6 @@ a.anchor-link {
     <span class="s2">"51881"</span><span class="p">:</span> <span class="s2">"Acute respiratory failure"</span>
 <span class="p">}</span>
 
-
 <span class="n">icd</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">diagnosis</span><span class="p">,</span> <span class="n">admissions</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="p">[</span><span class="s1">'hadm_id'</span><span class="p">,</span> <span class="s1">'admittime'</span><span class="p">]],</span> <span class="n">on</span><span class="o">=</span><span class="s1">'hadm_id'</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s1">'left'</span><span class="p">)</span>
 
 <span class="n">icd</span>
@@ -7582,7 +7581,7 @@ a.anchor-link {
 </div>
 <div class="jp-OutputArea jp-Cell-outputArea">
 <div class="jp-OutputArea-child jp-OutputArea-executeResult">
-<div class="jp-OutputPrompt jp-OutputArea-prompt">Out[3]:</div>
+<div class="jp-OutputPrompt jp-OutputArea-prompt">Out[8]:</div>
 <div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/html" tabindex="0">
 <div>
 <style scoped="">
@@ -7734,12 +7733,13 @@ a.anchor-link {
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [4]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In [11]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-ipython3"><pre><span></span><span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">'./data_processed/data_first_record.csv'</span><span class="p">,</span> <span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 
-<span class="n">data</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">head</span><span class="p">())</span>
 </pre></div>
 </div>
 </div>
@@ -7749,175 +7749,47 @@ a.anchor-link {
 <div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
 </div>
 <div class="jp-OutputArea jp-Cell-outputArea">
-<div class="jp-OutputArea-child jp-OutputArea-executeResult">
-<div class="jp-OutputPrompt jp-OutputArea-prompt">Out[4]:</div>
-<div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/html" tabindex="0">
-<div>
-<style scoped="">
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
+<div class="jp-OutputArea-child">
+<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
+<pre>(652, 25)
+      subject_id               intime      los  gender       age  heart_rate  \
+327     10024331  2141-03-18 19:36:08  4.10571       1  0.622768   -0.922776   
+1022    10025647  2176-09-22 17:57:15  1.96810       1  1.364195   -0.922776   
+896     10037975  2185-01-17 19:12:12  4.87824       1 -0.225030    0.088031   
+908     10056223  2122-09-23 15:08:45  5.04106       1 -0.824804    0.037490   
+559     10063856  2174-03-08 01:04:16  1.37475       0 -0.473584   -2.287366   
 
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
+      respiratory_rate  hematocrit       rdw  platelet  ...  language_ENGLISH  \
+327          -0.562083   -0.203896 -1.315486 -0.620134  ...                 1   
+1022         -0.043414    0.163687 -0.324740 -0.356911  ...                 1   
+896           3.068597    1.371460  0.309338 -1.486846  ...                 1   
+908           0.129475   -0.729015 -0.285110 -1.095220  ...                 0   
+559          -0.389193   -0.116376 -1.355116  0.169536  ...                 1   
 
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-<thead>
-<tr style="text-align: right;">
-<th></th>
-<th>subject_id</th>
-<th>intime</th>
-<th>los</th>
-<th>gender</th>
-<th>age</th>
-<th>heart_rate</th>
-<th>respiratory_rate</th>
-<th>hematocrit</th>
-<th>rdw</th>
-<th>platelet</th>
-<th>...</th>
-<th>language_ENGLISH</th>
-<th>race_BLACK</th>
-<th>race_HISPANIC/LATINO</th>
-<th>race_OTHER</th>
-<th>race_WHITE</th>
-<th>marital_status_MARRIED</th>
-<th>marital_status_SINGLE</th>
-<th>marital_status_WIDOWED</th>
-<th>insurance_Medicare</th>
-<th>insurance_Other</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<th>327</th>
-<td>10024331</td>
-<td>2141-03-18 19:36:08</td>
-<td>4.10571</td>
-<td>1</td>
-<td>0.622768</td>
-<td>-0.922776</td>
-<td>-0.562083</td>
-<td>-0.203896</td>
-<td>-1.315486</td>
-<td>-0.620134</td>
-<td>...</td>
-<td>1</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-<td>1</td>
-<td>1</td>
-<td>0</td>
-<td>0</td>
-<td>1</td>
-<td>0</td>
-</tr>
-<tr>
-<th>1022</th>
-<td>10025647</td>
-<td>2176-09-22 17:57:15</td>
-<td>1.96810</td>
-<td>1</td>
-<td>1.364195</td>
-<td>-0.922776</td>
-<td>-0.043414</td>
-<td>0.163687</td>
-<td>-0.324740</td>
-<td>-0.356911</td>
-<td>...</td>
-<td>1</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-<td>1</td>
-<td>1</td>
-<td>0</td>
-<td>0</td>
-<td>1</td>
-<td>0</td>
-</tr>
-<tr>
-<th>896</th>
-<td>10037975</td>
-<td>2185-01-17 19:12:12</td>
-<td>4.87824</td>
-<td>1</td>
-<td>-0.225030</td>
-<td>0.088031</td>
-<td>3.068597</td>
-<td>1.371460</td>
-<td>0.309338</td>
-<td>-1.486846</td>
-<td>...</td>
-<td>1</td>
-<td>0</td>
-<td>0</td>
-<td>1</td>
-<td>0</td>
-<td>1</td>
-<td>0</td>
-<td>0</td>
-<td>1</td>
-<td>0</td>
-</tr>
-<tr>
-<th>908</th>
-<td>10056223</td>
-<td>2122-09-23 15:08:45</td>
-<td>5.04106</td>
-<td>1</td>
-<td>-0.824804</td>
-<td>0.037490</td>
-<td>0.129475</td>
-<td>-0.729015</td>
-<td>-0.285110</td>
-<td>-1.095220</td>
-<td>...</td>
-<td>0</td>
-<td>0</td>
-<td>1</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-<td>1</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-</tr>
-<tr>
-<th>559</th>
-<td>10063856</td>
-<td>2174-03-08 01:04:16</td>
-<td>1.37475</td>
-<td>0</td>
-<td>-0.473584</td>
-<td>-2.287366</td>
-<td>-0.389193</td>
-<td>-0.116376</td>
-<td>-1.355116</td>
-<td>0.169536</td>
-<td>...</td>
-<td>1</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-<td>1</td>
-<td>1</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-<td>1</td>
-</tr>
-</tbody>
-</table>
-<p>5 rows × 25 columns</p>
-</div>
+      race_BLACK  race_HISPANIC/LATINO  race_OTHER  race_WHITE  \
+327            0                     0           0           1   
+1022           0                     0           0           1   
+896            0                     0           1           0   
+908            0                     1           0           0   
+559            0                     0           0           1   
+
+      marital_status_MARRIED  marital_status_SINGLE  marital_status_WIDOWED  \
+327                        1                      0                       0   
+1022                       1                      0                       0   
+896                        1                      0                       0   
+908                        0                      1                       0   
+559                        1                      0                       0   
+
+      insurance_Medicare  insurance_Other  
+327                    1                0  
+1022                   1                0  
+896                    1                0  
+908                    0                0  
+559                    0                1  
+
+[5 rows x 25 columns]
+</pre>
 </div>
 </div>
 </div>
@@ -7927,7 +7799,7 @@ a.anchor-link {
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [5]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In [14]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-ipython3"><pre><span></span><span class="n">icd_</span> <span class="o">=</span> <span class="n">icd</span><span class="p">[</span><span class="n">icd</span><span class="o">.</span><span class="n">subject_id</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">subject_id</span><span class="p">)]</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="p">[</span><span class="s1">'subject_id'</span><span class="p">,</span> <span class="s1">'icd_code'</span><span class="p">,</span> <span class="s1">'admittime'</span><span class="p">]]</span>
@@ -7954,8 +7826,209 @@ a.anchor-link {
 <div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
 </div>
 <div class="jp-OutputArea jp-Cell-outputArea">
+<div class="jp-OutputArea-child">
+<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr" tabindex="0">
+<pre>C:\Users\sitdo\AppData\Local\Temp\ipykernel_9616\2595480099.py:11: FutureWarning: Setting an item of incompatible dtype is deprecated and will raise in a future error of pandas. Value '0       0
+1       0
+2       0
+3       0
+4       0
+       ..
+4638    0
+4639    0
+4640    0
+4642    0
+4643    0
+Name: 25000, Length: 2249, dtype: int32' has dtype incompatible with bool, please explicitly cast to a compatible dtype first.
+  p.iloc[:, 1:] = p.iloc[:, 1:].astype(int)
+C:\Users\sitdo\AppData\Local\Temp\ipykernel_9616\2595480099.py:11: FutureWarning: Setting an item of incompatible dtype is deprecated and will raise in a future error of pandas. Value '0       0
+1       0
+2       0
+3       0
+4       0
+       ..
+4638    0
+4639    1
+4640    0
+4642    0
+4643    1
+Name: 2761, Length: 2249, dtype: int32' has dtype incompatible with bool, please explicitly cast to a compatible dtype first.
+  p.iloc[:, 1:] = p.iloc[:, 1:].astype(int)
+C:\Users\sitdo\AppData\Local\Temp\ipykernel_9616\2595480099.py:11: FutureWarning: Setting an item of incompatible dtype is deprecated and will raise in a future error of pandas. Value '0       0
+1       0
+2       0
+3       1
+4       0
+       ..
+4638    0
+4639    0
+4640    0
+4642    0
+4643    0
+Name: 2875, Length: 2249, dtype: int32' has dtype incompatible with bool, please explicitly cast to a compatible dtype first.
+  p.iloc[:, 1:] = p.iloc[:, 1:].astype(int)
+C:\Users\sitdo\AppData\Local\Temp\ipykernel_9616\2595480099.py:11: FutureWarning: Setting an item of incompatible dtype is deprecated and will raise in a future error of pandas. Value '0       0
+1       0
+2       0
+3       0
+4       0
+       ..
+4638    0
+4639    0
+4640    0
+4642    0
+4643    0
+Name: 3051, Length: 2249, dtype: int32' has dtype incompatible with bool, please explicitly cast to a compatible dtype first.
+  p.iloc[:, 1:] = p.iloc[:, 1:].astype(int)
+C:\Users\sitdo\AppData\Local\Temp\ipykernel_9616\2595480099.py:11: FutureWarning: Setting an item of incompatible dtype is deprecated and will raise in a future error of pandas. Value '0       0
+1       0
+2       0
+3       0
+4       0
+       ..
+4638    0
+4639    0
+4640    0
+4642    0
+4643    0
+Name: 4280, Length: 2249, dtype: int32' has dtype incompatible with bool, please explicitly cast to a compatible dtype first.
+  p.iloc[:, 1:] = p.iloc[:, 1:].astype(int)
+C:\Users\sitdo\AppData\Local\Temp\ipykernel_9616\2595480099.py:11: FutureWarning: Setting an item of incompatible dtype is deprecated and will raise in a future error of pandas. Value '0       0
+1       0
+2       0
+3       0
+4       0
+       ..
+4638    0
+4639    0
+4640    0
+4642    0
+4643    0
+Name: 496, Length: 2249, dtype: int32' has dtype incompatible with bool, please explicitly cast to a compatible dtype first.
+  p.iloc[:, 1:] = p.iloc[:, 1:].astype(int)
+C:\Users\sitdo\AppData\Local\Temp\ipykernel_9616\2595480099.py:11: FutureWarning: Setting an item of incompatible dtype is deprecated and will raise in a future error of pandas. Value '0       0
+1       0
+2       0
+3       0
+4       0
+       ..
+4638    0
+4639    0
+4640    0
+4642    1
+4643    0
+Name: 51881, Length: 2249, dtype: int32' has dtype incompatible with bool, please explicitly cast to a compatible dtype first.
+  p.iloc[:, 1:] = p.iloc[:, 1:].astype(int)
+C:\Users\sitdo\AppData\Local\Temp\ipykernel_9616\2595480099.py:11: FutureWarning: Setting an item of incompatible dtype is deprecated and will raise in a future error of pandas. Value '0       0
+1       0
+2       0
+3       0
+4       0
+       ..
+4638    0
+4639    0
+4640    0
+4642    0
+4643    0
+Name: 56089, Length: 2249, dtype: int32' has dtype incompatible with bool, please explicitly cast to a compatible dtype first.
+  p.iloc[:, 1:] = p.iloc[:, 1:].astype(int)
+C:\Users\sitdo\AppData\Local\Temp\ipykernel_9616\2595480099.py:11: FutureWarning: Setting an item of incompatible dtype is deprecated and will raise in a future error of pandas. Value '0       1
+1       1
+2       0
+3       0
+4       1
+       ..
+4638    1
+4639    0
+4640    0
+4642    0
+4643    0
+Name: 5849, Length: 2249, dtype: int32' has dtype incompatible with bool, please explicitly cast to a compatible dtype first.
+  p.iloc[:, 1:] = p.iloc[:, 1:].astype(int)
+C:\Users\sitdo\AppData\Local\Temp\ipykernel_9616\2595480099.py:11: FutureWarning: Setting an item of incompatible dtype is deprecated and will raise in a future error of pandas. Value '0       0
+1       0
+2       0
+3       0
+4       0
+       ..
+4638    0
+4639    0
+4640    0
+4642    0
+4643    0
+Name: 5990, Length: 2249, dtype: int32' has dtype incompatible with bool, please explicitly cast to a compatible dtype first.
+  p.iloc[:, 1:] = p.iloc[:, 1:].astype(int)
+C:\Users\sitdo\AppData\Local\Temp\ipykernel_9616\2595480099.py:11: FutureWarning: Setting an item of incompatible dtype is deprecated and will raise in a future error of pandas. Value '0       0
+1       0
+2       1
+3       0
+4       0
+       ..
+4638    0
+4639    0
+4640    0
+4642    0
+4643    0
+Name: 7850, Length: 2249, dtype: int32' has dtype incompatible with bool, please explicitly cast to a compatible dtype first.
+  p.iloc[:, 1:] = p.iloc[:, 1:].astype(int)
+C:\Users\sitdo\AppData\Local\Temp\ipykernel_9616\2595480099.py:11: FutureWarning: Setting an item of incompatible dtype is deprecated and will raise in a future error of pandas. Value '0       0
+1       0
+2       0
+3       0
+4       0
+       ..
+4638    0
+4639    0
+4640    1
+4642    0
+4643    0
+Name: 99592, Length: 2249, dtype: int32' has dtype incompatible with bool, please explicitly cast to a compatible dtype first.
+  p.iloc[:, 1:] = p.iloc[:, 1:].astype(int)
+C:\Users\sitdo\AppData\Local\Temp\ipykernel_9616\2595480099.py:11: FutureWarning: Setting an item of incompatible dtype is deprecated and will raise in a future error of pandas. Value '0       0
+1       0
+2       0
+3       0
+4       0
+       ..
+4638    0
+4639    0
+4640    0
+4642    0
+4643    0
+Name: D649, Length: 2249, dtype: int32' has dtype incompatible with bool, please explicitly cast to a compatible dtype first.
+  p.iloc[:, 1:] = p.iloc[:, 1:].astype(int)
+C:\Users\sitdo\AppData\Local\Temp\ipykernel_9616\2595480099.py:11: FutureWarning: Setting an item of incompatible dtype is deprecated and will raise in a future error of pandas. Value '0       0
+1       0
+2       0
+3       0
+4       0
+       ..
+4638    0
+4639    0
+4640    0
+4642    0
+4643    0
+Name: I10, Length: 2249, dtype: int32' has dtype incompatible with bool, please explicitly cast to a compatible dtype first.
+  p.iloc[:, 1:] = p.iloc[:, 1:].astype(int)
+C:\Users\sitdo\AppData\Local\Temp\ipykernel_9616\2595480099.py:11: FutureWarning: Setting an item of incompatible dtype is deprecated and will raise in a future error of pandas. Value '0       0
+1       0
+2       0
+3       0
+4       0
+       ..
+4638    0
+4639    0
+4640    0
+4642    0
+4643    0
+Name: V1582, Length: 2249, dtype: int32' has dtype incompatible with bool, please explicitly cast to a compatible dtype first.
+  p.iloc[:, 1:] = p.iloc[:, 1:].astype(int)
+</pre>
+</div>
+</div>
 <div class="jp-OutputArea-child jp-OutputArea-executeResult">
-<div class="jp-OutputPrompt jp-OutputArea-prompt">Out[5]:</div>
+<div class="jp-OutputPrompt jp-OutputArea-prompt">Out[14]:</div>
 <div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/html" tabindex="0">
 <div>
 <style scoped="">
@@ -8216,17 +8289,20 @@ a.anchor-link {
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [6]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In [21]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-ipython3"><pre><span></span><span class="p">(</span>
-    <span class="n">pd</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span>
-        <span class="n">data</span><span class="p">,</span>
+    <span class="n">data</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span>
         <span class="n">p</span><span class="p">,</span>
         <span class="n">on</span><span class="o">=</span><span class="s1">'subject_id'</span><span class="p">,</span>
         <span class="n">how</span><span class="o">=</span><span class="s1">'left'</span>
     <span class="p">)</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="mf">0.0</span><span class="p">)</span>
-    <span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">'subject_id'</span><span class="p">,</span> <span class="s1">'intime'</span><span class="p">])</span>
+    <span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span>
+        <span class="s1">'subject_id'</span><span class="p">,</span> <span class="s1">'intime'</span><span class="p">,</span>
+        <span class="s1">'race_BLACK'</span><span class="p">,</span> <span class="s1">'race_HISPANIC/LATINO'</span><span class="p">,</span> <span class="s1">'race_OTHER'</span><span class="p">,</span> <span class="s1">'race_WHITE'</span><span class="p">,</span> 
+        <span class="s1">'marital_status_SINGLE'</span><span class="p">,</span> <span class="s1">'marital_status_WIDOWED'</span><span class="p">,</span>
+    <span class="p">])</span>
     <span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="n">mapping</span><span class="p">)</span>
     <span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s1">'./data_processed/data_first_record_with_commorbidities.csv'</span><span class="p">)</span>
 <span class="p">)</span>
@@ -8251,12 +8327,13 @@ a.anchor-link {
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [7]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In [23]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-ipython3"><pre><span></span><span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">'./data_processed/data_die_in_icu.csv'</span><span class="p">,</span> <span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 
-<span class="n">data</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">head</span><span class="p">())</span>
 </pre></div>
 </div>
 </div>
@@ -8266,175 +8343,47 @@ a.anchor-link {
 <div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
 </div>
 <div class="jp-OutputArea jp-Cell-outputArea">
-<div class="jp-OutputArea-child jp-OutputArea-executeResult">
-<div class="jp-OutputPrompt jp-OutputArea-prompt">Out[7]:</div>
-<div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/html" tabindex="0">
-<div>
-<style scoped="">
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
+<div class="jp-OutputArea-child">
+<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
+<pre>(139, 25)
+      subject_id               intime       los  gender       age  heart_rate  \
+896     10037975  2185-01-17 19:12:12  4.878240       1 -0.225030    0.088031   
+1145    10135345  2131-09-05 17:16:00  0.942813       0 -0.892544   -1.124938   
+447     10149929  2166-07-27 15:39:59  9.745490       1 -0.126950   -0.063590   
+1072    10251182  2155-05-02 00:30:00  0.670891       1  0.179994   -0.922776   
+139     10328470  2141-08-12 06:03:35  0.318137       0  0.584312    2.817210   
 
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
+      respiratory_rate  hematocrit       rdw  platelet  ...  language_ENGLISH  \
+896           3.068597    1.371460  0.309338 -1.486846  ...                 1   
+1145         -0.389193    0.461254 -1.117337  0.631782  ...                 1   
+447          -0.562083   -1.324150  0.230078 -0.774216  ...                 1   
+1072         -0.389193    1.038885 -0.602149 -0.042327  ...                 1   
+139           2.204149   -0.396440  0.269708  1.479233  ...                 1   
 
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-<thead>
-<tr style="text-align: right;">
-<th></th>
-<th>subject_id</th>
-<th>intime</th>
-<th>los</th>
-<th>gender</th>
-<th>age</th>
-<th>heart_rate</th>
-<th>respiratory_rate</th>
-<th>hematocrit</th>
-<th>rdw</th>
-<th>platelet</th>
-<th>...</th>
-<th>language_ENGLISH</th>
-<th>race_BLACK</th>
-<th>race_HISPANIC/LATINO</th>
-<th>race_OTHER</th>
-<th>race_WHITE</th>
-<th>marital_status_MARRIED</th>
-<th>marital_status_SINGLE</th>
-<th>marital_status_WIDOWED</th>
-<th>insurance_Medicare</th>
-<th>insurance_Other</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<th>896</th>
-<td>10037975</td>
-<td>2185-01-17 19:12:12</td>
-<td>4.878240</td>
-<td>1</td>
-<td>-0.225030</td>
-<td>0.088031</td>
-<td>3.068597</td>
-<td>1.371460</td>
-<td>0.309338</td>
-<td>-1.486846</td>
-<td>...</td>
-<td>1</td>
-<td>0</td>
-<td>0</td>
-<td>1</td>
-<td>0</td>
-<td>1</td>
-<td>0</td>
-<td>0</td>
-<td>1</td>
-<td>0</td>
-</tr>
-<tr>
-<th>1145</th>
-<td>10135345</td>
-<td>2131-09-05 17:16:00</td>
-<td>0.942813</td>
-<td>0</td>
-<td>-0.892544</td>
-<td>-1.124938</td>
-<td>-0.389193</td>
-<td>0.461254</td>
-<td>-1.117337</td>
-<td>0.631782</td>
-<td>...</td>
-<td>1</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-<td>1</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-<td>1</td>
-</tr>
-<tr>
-<th>447</th>
-<td>10149929</td>
-<td>2166-07-27 15:39:59</td>
-<td>9.745490</td>
-<td>1</td>
-<td>-0.126950</td>
-<td>-0.063590</td>
-<td>-0.562083</td>
-<td>-1.324150</td>
-<td>0.230078</td>
-<td>-0.774216</td>
-<td>...</td>
-<td>1</td>
-<td>0</td>
-<td>0</td>
-<td>1</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-<td>1</td>
-</tr>
-<tr>
-<th>1072</th>
-<td>10251182</td>
-<td>2155-05-02 00:30:00</td>
-<td>0.670891</td>
-<td>1</td>
-<td>0.179994</td>
-<td>-0.922776</td>
-<td>-0.389193</td>
-<td>1.038885</td>
-<td>-0.602149</td>
-<td>-0.042327</td>
-<td>...</td>
-<td>1</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-<td>1</td>
-<td>1</td>
-<td>0</td>
-<td>0</td>
-<td>1</td>
-<td>0</td>
-</tr>
-<tr>
-<th>139</th>
-<td>10328470</td>
-<td>2141-08-12 06:03:35</td>
-<td>0.318137</td>
-<td>0</td>
-<td>0.584312</td>
-<td>2.817210</td>
-<td>2.204149</td>
-<td>-0.396440</td>
-<td>0.269708</td>
-<td>1.479233</td>
-<td>...</td>
-<td>1</td>
-<td>0</td>
-<td>0</td>
-<td>1</td>
-<td>0</td>
-<td>1</td>
-<td>0</td>
-<td>0</td>
-<td>1</td>
-<td>0</td>
-</tr>
-</tbody>
-</table>
-<p>5 rows × 25 columns</p>
-</div>
+      race_BLACK  race_HISPANIC/LATINO  race_OTHER  race_WHITE  \
+896            0                     0           1           0   
+1145           0                     0           0           1   
+447            0                     0           1           0   
+1072           0                     0           0           1   
+139            0                     0           1           0   
+
+      marital_status_MARRIED  marital_status_SINGLE  marital_status_WIDOWED  \
+896                        1                      0                       0   
+1145                       0                      0                       0   
+447                        0                      0                       0   
+1072                       1                      0                       0   
+139                        1                      0                       0   
+
+      insurance_Medicare  insurance_Other  
+896                    1                0  
+1145                   0                1  
+447                    0                1  
+1072                   1                0  
+139                    1                0  
+
+[5 rows x 25 columns]
+</pre>
 </div>
 </div>
 </div>
@@ -8444,7 +8393,7 @@ a.anchor-link {
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [8]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In [24]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-ipython3"><pre><span></span><span class="n">icd_</span> <span class="o">=</span> <span class="n">icd</span><span class="p">[</span><span class="n">icd</span><span class="o">.</span><span class="n">subject_id</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">subject_id</span><span class="p">)]</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="p">[</span><span class="s1">'subject_id'</span><span class="p">,</span> <span class="s1">'icd_code'</span><span class="p">,</span> <span class="s1">'admittime'</span><span class="p">]]</span>
@@ -8471,8 +8420,209 @@ a.anchor-link {
 <div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
 </div>
 <div class="jp-OutputArea jp-Cell-outputArea">
+<div class="jp-OutputArea-child">
+<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr" tabindex="0">
+<pre>C:\Users\sitdo\AppData\Local\Temp\ipykernel_9616\2595480099.py:11: FutureWarning: Setting an item of incompatible dtype is deprecated and will raise in a future error of pandas. Value '0       0
+1       1
+2       0
+3       0
+4       0
+       ..
+1903    0
+1904    0
+1905    0
+1906    0
+1907    0
+Name: 25000, Length: 1431, dtype: int32' has dtype incompatible with bool, please explicitly cast to a compatible dtype first.
+  p.iloc[:, 1:] = p.iloc[:, 1:].astype(int)
+C:\Users\sitdo\AppData\Local\Temp\ipykernel_9616\2595480099.py:11: FutureWarning: Setting an item of incompatible dtype is deprecated and will raise in a future error of pandas. Value '0       0
+1       0
+2       0
+3       0
+4       0
+       ..
+1903    0
+1904    1
+1905    1
+1906    0
+1907    0
+Name: 2761, Length: 1431, dtype: int32' has dtype incompatible with bool, please explicitly cast to a compatible dtype first.
+  p.iloc[:, 1:] = p.iloc[:, 1:].astype(int)
+C:\Users\sitdo\AppData\Local\Temp\ipykernel_9616\2595480099.py:11: FutureWarning: Setting an item of incompatible dtype is deprecated and will raise in a future error of pandas. Value '0       0
+1       0
+2       0
+3       0
+4       0
+       ..
+1903    0
+1904    0
+1905    0
+1906    0
+1907    0
+Name: 2875, Length: 1431, dtype: int32' has dtype incompatible with bool, please explicitly cast to a compatible dtype first.
+  p.iloc[:, 1:] = p.iloc[:, 1:].astype(int)
+C:\Users\sitdo\AppData\Local\Temp\ipykernel_9616\2595480099.py:11: FutureWarning: Setting an item of incompatible dtype is deprecated and will raise in a future error of pandas. Value '0       0
+1       0
+2       0
+3       0
+4       0
+       ..
+1903    0
+1904    0
+1905    0
+1906    0
+1907    0
+Name: 3051, Length: 1431, dtype: int32' has dtype incompatible with bool, please explicitly cast to a compatible dtype first.
+  p.iloc[:, 1:] = p.iloc[:, 1:].astype(int)
+C:\Users\sitdo\AppData\Local\Temp\ipykernel_9616\2595480099.py:11: FutureWarning: Setting an item of incompatible dtype is deprecated and will raise in a future error of pandas. Value '0       0
+1       0
+2       0
+3       0
+4       0
+       ..
+1903    0
+1904    0
+1905    0
+1906    0
+1907    0
+Name: 4280, Length: 1431, dtype: int32' has dtype incompatible with bool, please explicitly cast to a compatible dtype first.
+  p.iloc[:, 1:] = p.iloc[:, 1:].astype(int)
+C:\Users\sitdo\AppData\Local\Temp\ipykernel_9616\2595480099.py:11: FutureWarning: Setting an item of incompatible dtype is deprecated and will raise in a future error of pandas. Value '0       0
+1       0
+2       0
+3       0
+4       0
+       ..
+1903    0
+1904    0
+1905    0
+1906    0
+1907    0
+Name: 496, Length: 1431, dtype: int32' has dtype incompatible with bool, please explicitly cast to a compatible dtype first.
+  p.iloc[:, 1:] = p.iloc[:, 1:].astype(int)
+C:\Users\sitdo\AppData\Local\Temp\ipykernel_9616\2595480099.py:11: FutureWarning: Setting an item of incompatible dtype is deprecated and will raise in a future error of pandas. Value '0       0
+1       0
+2       0
+3       0
+4       0
+       ..
+1903    0
+1904    0
+1905    0
+1906    0
+1907    0
+Name: 51881, Length: 1431, dtype: int32' has dtype incompatible with bool, please explicitly cast to a compatible dtype first.
+  p.iloc[:, 1:] = p.iloc[:, 1:].astype(int)
+C:\Users\sitdo\AppData\Local\Temp\ipykernel_9616\2595480099.py:11: FutureWarning: Setting an item of incompatible dtype is deprecated and will raise in a future error of pandas. Value '0       0
+1       0
+2       0
+3       0
+4       0
+       ..
+1903    0
+1904    0
+1905    0
+1906    0
+1907    0
+Name: 56089, Length: 1431, dtype: int32' has dtype incompatible with bool, please explicitly cast to a compatible dtype first.
+  p.iloc[:, 1:] = p.iloc[:, 1:].astype(int)
+C:\Users\sitdo\AppData\Local\Temp\ipykernel_9616\2595480099.py:11: FutureWarning: Setting an item of incompatible dtype is deprecated and will raise in a future error of pandas. Value '0       1
+1       0
+2       1
+3       0
+4       0
+       ..
+1903    1
+1904    0
+1905    0
+1906    0
+1907    0
+Name: 5849, Length: 1431, dtype: int32' has dtype incompatible with bool, please explicitly cast to a compatible dtype first.
+  p.iloc[:, 1:] = p.iloc[:, 1:].astype(int)
+C:\Users\sitdo\AppData\Local\Temp\ipykernel_9616\2595480099.py:11: FutureWarning: Setting an item of incompatible dtype is deprecated and will raise in a future error of pandas. Value '0       0
+1       0
+2       0
+3       0
+4       0
+       ..
+1903    0
+1904    0
+1905    0
+1906    0
+1907    0
+Name: 5990, Length: 1431, dtype: int32' has dtype incompatible with bool, please explicitly cast to a compatible dtype first.
+  p.iloc[:, 1:] = p.iloc[:, 1:].astype(int)
+C:\Users\sitdo\AppData\Local\Temp\ipykernel_9616\2595480099.py:11: FutureWarning: Setting an item of incompatible dtype is deprecated and will raise in a future error of pandas. Value '0       0
+1       0
+2       0
+3       0
+4       0
+       ..
+1903    0
+1904    0
+1905    0
+1906    0
+1907    0
+Name: 7850, Length: 1431, dtype: int32' has dtype incompatible with bool, please explicitly cast to a compatible dtype first.
+  p.iloc[:, 1:] = p.iloc[:, 1:].astype(int)
+C:\Users\sitdo\AppData\Local\Temp\ipykernel_9616\2595480099.py:11: FutureWarning: Setting an item of incompatible dtype is deprecated and will raise in a future error of pandas. Value '0       0
+1       0
+2       0
+3       0
+4       0
+       ..
+1903    0
+1904    0
+1905    0
+1906    1
+1907    1
+Name: 99592, Length: 1431, dtype: int32' has dtype incompatible with bool, please explicitly cast to a compatible dtype first.
+  p.iloc[:, 1:] = p.iloc[:, 1:].astype(int)
+C:\Users\sitdo\AppData\Local\Temp\ipykernel_9616\2595480099.py:11: FutureWarning: Setting an item of incompatible dtype is deprecated and will raise in a future error of pandas. Value '0       0
+1       0
+2       0
+3       0
+4       0
+       ..
+1903    0
+1904    0
+1905    0
+1906    0
+1907    0
+Name: D649, Length: 1431, dtype: int32' has dtype incompatible with bool, please explicitly cast to a compatible dtype first.
+  p.iloc[:, 1:] = p.iloc[:, 1:].astype(int)
+C:\Users\sitdo\AppData\Local\Temp\ipykernel_9616\2595480099.py:11: FutureWarning: Setting an item of incompatible dtype is deprecated and will raise in a future error of pandas. Value '0       0
+1       0
+2       0
+3       0
+4       0
+       ..
+1903    0
+1904    0
+1905    0
+1906    0
+1907    0
+Name: I10, Length: 1431, dtype: int32' has dtype incompatible with bool, please explicitly cast to a compatible dtype first.
+  p.iloc[:, 1:] = p.iloc[:, 1:].astype(int)
+C:\Users\sitdo\AppData\Local\Temp\ipykernel_9616\2595480099.py:11: FutureWarning: Setting an item of incompatible dtype is deprecated and will raise in a future error of pandas. Value '0       0
+1       0
+2       0
+3       1
+4       1
+       ..
+1903    0
+1904    0
+1905    0
+1906    0
+1907    0
+Name: V1582, Length: 1431, dtype: int32' has dtype incompatible with bool, please explicitly cast to a compatible dtype first.
+  p.iloc[:, 1:] = p.iloc[:, 1:].astype(int)
+</pre>
+</div>
+</div>
 <div class="jp-OutputArea-child jp-OutputArea-executeResult">
-<div class="jp-OutputPrompt jp-OutputArea-prompt">Out[8]:</div>
+<div class="jp-OutputPrompt jp-OutputArea-prompt">Out[24]:</div>
 <div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/html" tabindex="0">
 <div>
 <style scoped="">
@@ -8728,12 +8878,12 @@ a.anchor-link {
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [9]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In [25]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-ipython3"><pre><span></span><span class="p">(</span>
@@ -8743,11 +8893,336 @@ a.anchor-link {
         <span class="n">on</span><span class="o">=</span><span class="s1">'subject_id'</span><span class="p">,</span>
         <span class="n">how</span><span class="o">=</span><span class="s1">'left'</span>
     <span class="p">)</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="mf">0.0</span><span class="p">)</span>
-    <span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">'subject_id'</span><span class="p">,</span> <span class="s1">'intime'</span><span class="p">])</span>
+    <span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span>
+        <span class="s1">'subject_id'</span><span class="p">,</span> <span class="s1">'intime'</span><span class="p">,</span>
+        <span class="s1">'race_BLACK'</span><span class="p">,</span> <span class="s1">'race_HISPANIC/LATINO'</span><span class="p">,</span> <span class="s1">'race_OTHER'</span><span class="p">,</span> <span class="s1">'race_WHITE'</span><span class="p">,</span> 
+        <span class="s1">'marital_status_SINGLE'</span><span class="p">,</span> <span class="s1">'marital_status_WIDOWED'</span><span class="p">,</span>
+    <span class="p">])</span>
     <span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="n">mapping</span><span class="p">)</span>
     <span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s1">'./data_processed/data_die_in_icu_with_commorbidities.csv'</span><span class="p">)</span>
 <span class="p">)</span>
 </pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell-outputWrapper">
+<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+</div>
+<div class="jp-OutputArea jp-Cell-outputArea">
+<div class="jp-OutputArea-child jp-OutputArea-executeResult">
+<div class="jp-OutputPrompt jp-OutputArea-prompt">Out[25]:</div>
+<div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/html" tabindex="0">
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+<thead>
+<tr style="text-align: right;">
+<th></th>
+<th>los</th>
+<th>gender</th>
+<th>age</th>
+<th>heart_rate</th>
+<th>respiratory_rate</th>
+<th>hematocrit</th>
+<th>rdw</th>
+<th>platelet</th>
+<th>mcv</th>
+<th>mch</th>
+<th>...</th>
+<th>Other finger(s) amputation status</th>
+<th>Acute respiratory failure</th>
+<th>Other specified intestinal obstruction</th>
+<th>Acute kidney failure</th>
+<th>Urinary tract infection</th>
+<th>Tachycardia</th>
+<th>Severe sepsis</th>
+<th>Anemia</th>
+<th>Essential (primary) hypertension</th>
+<th>Personal history of tobacco use</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<th>0</th>
+<td>4.878240</td>
+<td>1</td>
+<td>-0.225030</td>
+<td>0.088031</td>
+<td>3.068597</td>
+<td>1.371460</td>
+<td>0.309338</td>
+<td>-1.486846</td>
+<td>0.275588</td>
+<td>0.354672</td>
+<td>...</td>
+<td>1.0</td>
+<td>1.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>1.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+</tr>
+<tr>
+<th>1</th>
+<td>0.942813</td>
+<td>0</td>
+<td>-0.892544</td>
+<td>-1.124938</td>
+<td>-0.389193</td>
+<td>0.461254</td>
+<td>-1.117337</td>
+<td>0.631782</td>
+<td>-0.424617</td>
+<td>-0.566844</td>
+<td>...</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>1.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+</tr>
+<tr>
+<th>2</th>
+<td>9.745490</td>
+<td>1</td>
+<td>-0.126950</td>
+<td>-0.063590</td>
+<td>-0.562083</td>
+<td>-1.324150</td>
+<td>0.230078</td>
+<td>-0.774216</td>
+<td>1.325896</td>
+<td>1.784611</td>
+<td>...</td>
+<td>0.0</td>
+<td>1.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+</tr>
+<tr>
+<th>3</th>
+<td>0.670891</td>
+<td>1</td>
+<td>0.179994</td>
+<td>-0.922776</td>
+<td>-0.389193</td>
+<td>1.038885</td>
+<td>-0.602149</td>
+<td>-0.042327</td>
+<td>-0.774720</td>
+<td>-0.090198</td>
+<td>...</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+</tr>
+<tr>
+<th>4</th>
+<td>0.318137</td>
+<td>0</td>
+<td>0.584312</td>
+<td>2.817210</td>
+<td>2.204149</td>
+<td>-0.396440</td>
+<td>0.269708</td>
+<td>1.479233</td>
+<td>0.392289</td>
+<td>-0.566844</td>
+<td>...</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>1.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+</tr>
+<tr>
+<th>...</th>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+</tr>
+<tr>
+<th>134</th>
+<td>1.795720</td>
+<td>1</td>
+<td>-0.657220</td>
+<td>0.138571</td>
+<td>-0.562083</td>
+<td>0.163687</td>
+<td>-0.047331</td>
+<td>-0.504573</td>
+<td>0.042186</td>
+<td>0.386449</td>
+<td>...</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>1.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+</tr>
+<tr>
+<th>135</th>
+<td>19.829300</td>
+<td>0</td>
+<td>1.393125</td>
+<td>1.250459</td>
+<td>0.302365</td>
+<td>-0.116376</td>
+<td>-0.839928</td>
+<td>0.779444</td>
+<td>-0.424617</td>
+<td>-0.566844</td>
+<td>...</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>1.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>1.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>1.0</td>
+</tr>
+<tr>
+<th>136</th>
+<td>1.972990</td>
+<td>0</td>
+<td>1.488736</td>
+<td>0.290192</td>
+<td>0.302365</td>
+<td>0.058663</td>
+<td>-0.839928</td>
+<td>0.394239</td>
+<td>-0.074515</td>
+<td>-0.407962</td>
+<td>...</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>1.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>1.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>1.0</td>
+</tr>
+<tr>
+<th>137</th>
+<td>1.825230</td>
+<td>0</td>
+<td>2.190119</td>
+<td>0.189112</td>
+<td>-0.389193</td>
+<td>2.614242</td>
+<td>-0.483259</td>
+<td>-0.048747</td>
+<td>1.209195</td>
+<td>0.354672</td>
+<td>...</td>
+<td>0.0</td>
+<td>1.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>1.0</td>
+<td>0.0</td>
+<td>1.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+</tr>
+<tr>
+<th>138</th>
+<td>14.175100</td>
+<td>0</td>
+<td>-0.301237</td>
+<td>0.088031</td>
+<td>0.302365</td>
+<td>-1.166614</td>
+<td>-0.483259</td>
+<td>-1.165841</td>
+<td>0.275588</td>
+<td>0.894871</td>
+<td>...</td>
+<td>0.0</td>
+<td>1.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>1.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>1.0</td>
+</tr>
+</tbody>
+</table>
+<p>139 rows × 32 columns</p>
+</div>
 </div>
 </div>
 </div>
