@@ -10,7 +10,7 @@ output:
 
 ```{r}
 rm(list=ls(all=TRUE))
-setwd('C:/Users/sitdo/Documents/GitHub/IBD-EDA/aes/')
+setwd('C:/Users/kexu/Documents/GitHub/IBD-EDA/aes/')
 ```
 
 # Loading Data
@@ -18,9 +18,13 @@ setwd('C:/Users/sitdo/Documents/GitHub/IBD-EDA/aes/')
 ```{r}
 library(dplyr)
 
-data <- read.csv("./data_processed/data_die_in_icu_with_commorbidities.csv") %>% select(-1)
+read.csv('./data_processed/data_first_record_with_commorbidities_.csv') %>%
+  select(-X) %>%
+  mutate(los = ifelse(los >= mean(los), 1, 0)) %>%
+  subset(die_in_icu == 0) %>%
+  select(-die_in_icu) ->
+  data
 
-data$los <- if_else(data$los <= 4, 0, 1)
 ```
 
 
