@@ -1,5 +1,6 @@
 rm(list=ls(all=TRUE))
-setwd('C:/Users/kexu/Documents/GitHub/IBD-EDA/aes/')
+# setwd('C:/Users/kexu/Documents/GitHub/IBD-EDA/aes/')
+setwd('/home/kexu/Documents/GitHub/IBD-EDA/aes/')
 
 
 library(dplyr)
