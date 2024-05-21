@@ -17,4 +17,3 @@ img/*
 /aes/.ipynb_checkpoints
 aes/.Rhistory
 aes/result_temp.csv
-aes/importance.csv

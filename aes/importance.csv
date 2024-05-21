@@ -1,0 +1,32 @@
+Feature,Importance
+Age,100
+MCV,89.158979
+RDW,67.933354
+Acute Respiratory Failure,66.976096
+Respiratory Rate,63.433521
+Hemoglobin,62.007212
+Heart Rate,58.87308
+Hematocrit,55.504682
+MCH,49.290672
+Platelet,44.508467
+Personal History of Tobacco Use,31.615117
+Congestive Heart Failure,18.357309
+Thrombocytopenia,14.337111
+Severe Sepsis,10.480718
+Language English,9.488517
+Hyposmolality or Hyponatremia,9.056856
+CD Only,8.614283
+Intestinal Obstruction,8.178263
+Other.finger.s..amputation.status,7.820381
+Married,7.216036
+Diabetes Mellitus,6.995621
+Acute Kidney Failure,6.700172
+Medicare Insurance,6.270149
+Tachycardia,4.485979
+Gender,0
+UC Only,0
+Other Insurance,0
+Tobacco Use Disorder,0
+Urinary Tract Infection,0
+Anemia,0
+Essential Primary Hypertension,0
