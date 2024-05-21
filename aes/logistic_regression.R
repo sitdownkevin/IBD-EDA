@@ -1,6 +1,6 @@
 rm(list=ls(all=TRUE))
-# setwd('C:/Users/kexu/Documents/GitHub/IBD-EDA/aes/')
-setwd('/home/kexu/Documents/GitHub/IBD-EDA/aes/')
+setwd('C:/Users/kexu/Documents/GitHub/IBD-EDA/aes/')
+# setwd('/home/kexu/Documents/GitHub/IBD-EDA/aes/')
 
 
 library(dplyr)
@@ -20,7 +20,7 @@ read.csv('./data_processed/data_first_record_with_commorbidities_.csv') %>%
   select(-X) %>%
   mutate(los = ifelse(los >= mean(los), 1, 0)) %>%
   subset(die_in_icu == 1) %>%
-  select(-die_in_icu) ->
+  select(-c(die_in_icu, icu_count)) ->
   dfB
 
 
@@ -63,28 +63,32 @@ model <- train(
   family = 'binomial',
   trControl = train_control,
 )
-print(model)
-print(summary(model$finalModel))
+
+summary_model <- summary(model$finalModel)
 
 # Coeff
-model_coefficients <- coef(model$finalModel)
-cat("Coefficients:\n")
-print(model_coefficients)
+coefficients <- summary_model$coefficients
+# print(coefficients)
 
 # Odds Ratio
-odds_ratios <- exp(model_coefficients)
-cat("\nOdds Ratios:\n")
-print(odds_ratios)
+odds_ratios <- exp(coefficients[,1])
+# print(odds_ratios)
 
 # 95%CI
 conf_int <- exp(confint(model$finalModel))
-cat("\n95% Confidence Intervals for Odds Ratios:\n")
-print(conf_int)
+# print(conf_int)
 
-# P Value
-summary_model <- summary(model$finalModel)
-cat("\nP-values:\n")
-print(summary_model$coefficients[, 4])
+# Result
+result <- data.frame(
+  # Parameter = rownames(summary_model$coefficients),
+  Estimate = summary_model$coefficients[,1],
+  S.E. = summary_model$coefficients[,2],
+  PValue = summary_model$coefficients[,4],
+  OR1 = odds_ratios, OR2 = conf_int[,1], OR3 = conf_int[,2]
+)
+
+write.csv(result, file = "result_temp.csv")
+
 
 # Predictions
 data$predictions <- predict(model, data, type = 'raw')
@@ -103,3 +107,22 @@ roc_curve <- roc(data[[outcome_var]], data$predictions_prob)
 plot(roc_curve, main="ROC Curve")
 auc <- auc(roc_curve)
 cat("AUC:", auc, "\n")
+
+library(ggplot2)
+# Create a data frame for plotting
+roc_df <- data.frame(
+  fpr = 1 - roc_curve$specificities,
+  tpr = roc_curve$sensitivities
+)
+library(extrafont)
+loadfonts(device = 'win')
+
+# Plot the ROC curve using ggplot2
+ggplot(roc_df, aes(x = fpr, y = tpr)) +
+  geom_area(fill = "gray", alpha = 0.2) +       # Fill the area under the curve
+  geom_line(color = "blue", size = 1.2) +       # Add the ROC curve line
+  geom_abline(linetype = "dashed", color = "red") +
+  labs(x = "1 - Specificity", y = "Sensitivity") +
+  annotate("text", x = 0.75, y = 0.25, label = paste("AUC:", round(auc, 3)), size = 5, color = "black", family = "Times New Roman") +
+  theme_minimal(base_family = 'Times New Roman') +
+  coord_fixed(ratio = 1)  # Ensures the aspect ratio is square

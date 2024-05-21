@@ -7,24 +7,29 @@ library(pROC)
 
 # Loading Data
 ## Plan A
-dfA <- read.csv('./data_processed/data_first_record_with_commorbidities_.csv') %>%
+read.csv('./data_processed/data_first_record_with_commorbidities_.csv') %>%
   select(-X) %>%
   subset(die_in_icu == 0) %>%
   mutate(los = ifelse(los >= mean(los), 1, 0)) %>%
-  select(-die_in_icu)
+  select(-die_in_icu) ->
+  dfA
+
 
 ## Plan B
-dfB <- read.csv('./data_processed/data_first_record_with_commorbidities_.csv') %>%
+read.csv('./data_processed/data_first_record_with_commorbidities_.csv') %>%
   select(-X) %>%
   mutate(los = ifelse(los >= mean(los), 1, 0)) %>%
   subset(die_in_icu == 1) %>%
-  select(-die_in_icu)
+  select(-c(die_in_icu, icu_count)) ->
+  dfB
+
 
 ## Plan C
-dfC <- read.csv('./data_processed/data_first_record_with_commorbidities.csv') %>%
+read.csv('./data_processed/data_first_record_with_commorbidities.csv') %>%
   select(-X) %>%
   mutate(los = ifelse(los >= mean(los), 1, 0)) %>%
-  select(-c(die_in_icu, icu_count))
+  select(-c(die_in_icu, icu_count)) ->
+  dfC
 
 data <- dfC
 
@@ -77,3 +82,29 @@ roc_curve <- roc(data[[outcome_var]], data$predictions_prob)
 plot(roc_curve, main="ROC Curve")
 auc <- auc(roc_curve)
 cat("AUC:", auc, "\n")
+
+library(ggplot2)
+# Create a data frame for plotting
+roc_df <- data.frame(
+  fpr = 1 - roc_curve$specificities,
+  tpr = roc_curve$sensitivities
+)
+library(extrafont)
+loadfonts(device = 'win')
+
+# Plot the ROC curve using ggplot2
+ggplot(roc_df, aes(x = fpr, y = tpr)) +
+  geom_area(fill = "gray", alpha = 0.2) +       # Fill the area under the curve
+  geom_line(color = "blue", size = 1.2) +       # Add the ROC curve line
+  geom_abline(linetype = "dashed", color = "red") +
+  labs(x = "1 - Specificity", y = "Sensitivity") +
+  annotate("text", x = 0.75, y = 0.25, label = paste("AUC:", round(auc, 3)), size = 5, color = "black", family = "Times New Roman") +
+  theme_minimal(base_family = 'Times New Roman') +
+  coord_fixed(ratio = 1)  # Ensures the aspect ratio is square
+
+importance <- varImp(model)
+result <- data.frame(
+  names = rownames(importance$importance),
+  importance = importance$importance[,1]
+)
+
