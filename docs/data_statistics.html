@@ -7541,14 +7541,14 @@ a.anchor-link {
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [7]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In [92]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">ttest_ind</span>
+<span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">ttest_ind</span><span class="p">,</span> <span class="n">chi2_contingency</span><span class="p">,</span> <span class="n">fisher_exact</span>
 </pre></div>
 </div>
 </div>
@@ -7559,7 +7559,7 @@ a.anchor-link {
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [4]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In [93]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-ipython3"><pre><span></span><span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">'./data_processed/data_stats_.csv'</span><span class="p">,</span> <span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
@@ -7574,7 +7574,7 @@ a.anchor-link {
 </div>
 <div class="jp-OutputArea jp-Cell-outputArea">
 <div class="jp-OutputArea-child jp-OutputArea-executeResult">
-<div class="jp-OutputPrompt jp-OutputArea-prompt">Out[4]:</div>
+<div class="jp-OutputPrompt jp-OutputArea-prompt">Out[93]:</div>
 <div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/html" tabindex="0">
 <div>
 <style scoped="">
@@ -7751,24 +7751,60 @@ a.anchor-link {
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [8]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In [94]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
-<div class="highlight hl-ipython3"><pre><span></span><span class="n">grouped</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">'die_in_icu'</span><span class="p">)</span>
-<span class="n">stats</span> <span class="o">=</span> <span class="n">grouped</span><span class="o">.</span><span class="n">agg</span><span class="p">([</span><span class="s1">'mean'</span><span class="p">,</span> <span class="s1">'std'</span><span class="p">])</span>
+<div class="highlight hl-ipython3"><pre><span></span><span class="n">Index_res</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">A_res</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">B_res</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">P_res</span> <span class="o">=</span> <span class="p">[]</span>
 
-<span class="n">results</span> <span class="o">=</span> <span class="p">{}</span>
 <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">data</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
-    <span class="k">if</span> <span class="n">col</span> <span class="o">==</span> <span class="s1">'die_in_icu'</span><span class="p">:</span>
-        <span class="k">continue</span>
-    <span class="n">group0</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">data</span><span class="p">[</span><span class="s1">'die_in_icu'</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">][</span><span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span>
-    <span class="n">group1</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">data</span><span class="p">[</span><span class="s1">'die_in_icu'</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">][</span><span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span>
-    <span class="n">t_stat</span><span class="p">,</span> <span class="n">p_val</span> <span class="o">=</span> <span class="n">ttest_ind</span><span class="p">(</span><span class="n">group0</span><span class="p">,</span> <span class="n">group1</span><span class="p">)</span>
-    <span class="n">results</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'t-stat'</span><span class="p">:</span> <span class="n">t_stat</span><span class="p">,</span> <span class="s1">'p-value'</span><span class="p">:</span> <span class="n">p_val</span><span class="p">}</span>
+    <span class="n">A</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">data</span><span class="o">.</span><span class="n">die_in_icu</span> <span class="o">==</span> <span class="mi">0</span><span class="p">,</span> <span class="p">[</span><span class="n">col</span><span class="p">]]</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span>
+    <span class="n">B</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">data</span><span class="o">.</span><span class="n">die_in_icu</span> <span class="o">==</span> <span class="mi">1</span><span class="p">,</span> <span class="p">[</span><span class="n">col</span><span class="p">]]</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span>
     
-<span class="n">stat_diff</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">results</span><span class="p">)</span><span class="o">.</span><span class="n">transpose</span><span class="p">()</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">stats</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">stat_diff</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">data</span><span class="p">[</span><span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">dtype</span> <span class="o">==</span> <span class="s1">'bool'</span> <span class="ow">or</span> <span class="p">(</span><span class="n">col</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">'gender'</span><span class="p">,</span> <span class="s1">'uc_only'</span><span class="p">,</span> <span class="s1">'cd_only'</span><span class="p">]):</span>
+        <span class="c1"># print(f'INFO: {col} (bool)')</span>
+        <span class="n">A_weight</span> <span class="o">=</span> <span class="p">(</span><span class="n">A</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span> <span class="o">/</span> <span class="n">A</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="mi">100</span><span class="p">)</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
+        <span class="n">B_weight</span> <span class="o">=</span> <span class="p">(</span><span class="n">B</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span> <span class="o">/</span> <span class="n">B</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="mi">100</span><span class="p">)</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
+
+        <span class="n">group_counts</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">groupby</span><span class="p">([</span><span class="s1">'die_in_icu'</span><span class="p">,</span> <span class="n">col</span><span class="p">])</span><span class="o">.</span><span class="n">size</span><span class="p">()</span><span class="o">.</span><span class="n">unstack</span><span class="p">(</span><span class="n">fill_value</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">chi2_stat</span><span class="p">,</span> <span class="n">p_val</span><span class="p">,</span> <span class="n">dof</span><span class="p">,</span> <span class="n">expected</span> <span class="o">=</span> <span class="n">chi2_contingency</span><span class="p">(</span><span class="n">group_counts</span><span class="p">)</span>
+        <span class="n">oddsratio</span><span class="p">,</span> <span class="n">fisher_p_val</span> <span class="o">=</span> <span class="n">fisher_exact</span><span class="p">(</span><span class="n">group_counts</span><span class="p">)</span>
+        
+        <span class="c1"># print(f"Chi-squared test p-value: {p_val}")</span>
+        <span class="c1"># print(f"Fisher's exact test p-value: {fisher_p_val}")</span>
+
+        <span class="n">Index_res</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">col</span><span class="p">)</span>
+        <span class="n">A_res</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">A_weight</span><span class="si">:</span><span class="s1">.2f</span><span class="si">}</span><span class="s1">%'</span><span class="p">)</span>
+        <span class="n">B_res</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">B_weight</span><span class="si">:</span><span class="s1">.2f</span><span class="si">}</span><span class="s1">%'</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">p_val</span> <span class="o">&lt;=</span> <span class="mf">0.05</span><span class="p">:</span>
+            <span class="n">P_res</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">p_val</span><span class="si">:</span><span class="s1">.4f</span><span class="si">}</span><span class="s1">*'</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">P_res</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">p_val</span><span class="si">:</span><span class="s1">.4f</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
+        <span class="c1"># print(f'INFO: A: {A_weight:.2f}% B: {B_weight:.2f}%')</span>
+    <span class="k">elif</span> <span class="n">data</span><span class="p">[</span><span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">dtype</span> <span class="o">==</span> <span class="s1">'float64'</span><span class="p">:</span>
+        <span class="n">t_stat</span><span class="p">,</span> <span class="n">p_val</span> <span class="o">=</span> <span class="n">ttest_ind</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">)</span>
+        <span class="n">p_val</span> <span class="o">=</span> <span class="n">p_val</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+        <span class="n">Index_res</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">col</span><span class="p">)</span>
+        <span class="n">A_res</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">A</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="o">.</span><span class="n">item</span><span class="p">()</span><span class="si">:</span><span class="s1">.2f</span><span class="si">}</span><span class="s1">±</span><span class="si">{</span><span class="n">A</span><span class="o">.</span><span class="n">std</span><span class="p">()</span><span class="o">.</span><span class="n">item</span><span class="p">()</span><span class="si">:</span><span class="s1">.2f</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
+        <span class="n">B_res</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">B</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="o">.</span><span class="n">item</span><span class="p">()</span><span class="si">:</span><span class="s1">.2f</span><span class="si">}</span><span class="s1">±</span><span class="si">{</span><span class="n">B</span><span class="o">.</span><span class="n">std</span><span class="p">()</span><span class="o">.</span><span class="n">item</span><span class="p">()</span><span class="si">:</span><span class="s1">.2f</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">p_val</span> <span class="o">&lt;=</span> <span class="mf">0.05</span><span class="p">:</span>
+            <span class="n">P_res</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">p_val</span><span class="si">:</span><span class="s1">.4f</span><span class="si">}</span><span class="s1">*'</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">P_res</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">p_val</span><span class="si">:</span><span class="s1">.4f</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'WARN: </span><span class="si">{</span><span class="n">col</span><span class="si">}</span><span class="s1"> is missing.'</span><span class="p">)</span>
+
+<span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+    <span class="p">{</span>
+        <span class="s1">'Not Die in ICU'</span><span class="p">:</span> <span class="n">A_res</span><span class="p">,</span>
+        <span class="s1">'Die in ICU'</span><span class="p">:</span> <span class="n">B_res</span><span class="p">,</span>
+        <span class="s1">'P-Value'</span><span class="p">:</span> <span class="n">P_res</span><span class="p">,</span>
+    <span class="p">},</span>
+    <span class="n">index</span><span class="o">=</span><span class="n">Index_res</span><span class="p">,</span>
+<span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -7781,91 +7817,179 @@ a.anchor-link {
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>                 los              gender                  age             \
-                mean       std      mean       std       mean        std   
-die_in_icu                                                                 
-0           3.107160  4.204245  0.466599  0.499136  62.954711  15.687490   
-1           3.875328  5.641307  0.381295  0.487461  67.690234  13.782428   
-
-           heart_rate            respiratory_rate            ...  \
-                 mean        std             mean       std  ...   
-die_in_icu                                                   ...   
-0           87.548583  19.509296        19.157895  5.602085  ...   
-1           93.302158  21.112760        19.913669  6.946464  ...   
-
-           marital_status_SINGLE           marital_status_WIDOWED            \
-                            mean       std                   mean       std   
-die_in_icu                                                                    
-0                       0.336032  0.472589               0.119433  0.324462   
-1                       0.266187  0.443562               0.136691  0.344763   
-
-           insurance_Medicare           insurance_Other           icu_count  \
-                         mean       std            mean       std      mean   
-die_in_icu                                                                    
-0                    0.443320  0.497029        0.475709  0.499663  2.349190   
-1                    0.618705  0.487461        0.330935  0.472252  2.107914   
-
-                      
-                 std  
-die_in_icu            
-0           3.026149  
-1           2.483834  
-
-[2 rows x 48 columns]
-                          t-stat   p-value
-los                    -1.924658  0.054524
-gender                  1.891955  0.058754
-age                    -3.379882  0.000750
-heart_rate             -3.221876  0.001310
-respiratory_rate       -1.442448  0.149454
-hematocrit             -0.977846  0.328361
-rdw                     0.387443  0.698501
-platelet                0.053123  0.957643
-mcv                    -1.313360  0.189329
-mch                    -0.326294  0.744262
-hemoglobin             -0.739469  0.459777
-uc_only                -1.109549  0.267430
-cd_only                 0.354593  0.722961
-language_ENGLISH        0.991959  0.321431
-race_BLACK              1.446271  0.148380
-race_HISPANIC/LATINO    1.064780  0.287204
-race_OTHER             -0.512478  0.608417
-race_WHITE             -1.343633  0.179338
-marital_status_MARRIED -1.246371  0.212888
-marital_status_SINGLE   1.643511  0.100557
-marital_status_WIDOWED -0.582541  0.560319
-insurance_Medicare     -3.904392  0.000100
-insurance_Other         3.219561  0.001321
-icu_count               0.898295  0.369220
+<pre>WARN: die_in_icu is missing.
+WARN: icu_count is missing.
 </pre>
 </div>
 </div>
+<div class="jp-OutputArea-child jp-OutputArea-executeResult">
+<div class="jp-OutputPrompt jp-OutputArea-prompt">Out[94]:</div>
+<div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/html" tabindex="0">
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+<thead>
+<tr style="text-align: right;">
+<th></th>
+<th>Not Die in ICU</th>
+<th>Die in ICU</th>
+<th>P-Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<th>los</th>
+<td>3.11±4.20</td>
+<td>3.88±5.64</td>
+<td>0.0545</td>
+</tr>
+<tr>
+<th>gender</th>
+<td>46.66%</td>
+<td>38.13%</td>
+<td>0.0719</td>
+</tr>
+<tr>
+<th>age</th>
+<td>62.95±15.69</td>
+<td>67.69±13.78</td>
+<td>0.0008*</td>
+</tr>
+<tr>
+<th>heart_rate</th>
+<td>87.55±19.51</td>
+<td>93.30±21.11</td>
+<td>0.0013*</td>
+</tr>
+<tr>
+<th>respiratory_rate</th>
+<td>19.16±5.60</td>
+<td>19.91±6.95</td>
+<td>0.1495</td>
+</tr>
+<tr>
+<th>hematocrit</th>
+<td>30.20±5.76</td>
+<td>30.71±5.39</td>
+<td>0.3284</td>
+</tr>
+<tr>
+<th>rdw</th>
+<td>16.13±2.57</td>
+<td>16.04±2.18</td>
+<td>0.6985</td>
+</tr>
+<tr>
+<th>platelet</th>
+<td>247.69±156.37</td>
+<td>246.94±152.51</td>
+<td>0.9576</td>
+</tr>
+<tr>
+<th>mcv</th>
+<td>90.51±8.55</td>
+<td>91.53±8.71</td>
+<td>0.1893</td>
+</tr>
+<tr>
+<th>mch</th>
+<td>29.57±3.17</td>
+<td>29.67±3.02</td>
+<td>0.7443</td>
+</tr>
+<tr>
+<th>hemoglobin</th>
+<td>9.89±1.95</td>
+<td>10.02±1.80</td>
+<td>0.4598</td>
+</tr>
+<tr>
+<th>uc_only</th>
+<td>44.64%</td>
+<td>49.64%</td>
+<td>0.3082</td>
+</tr>
+<tr>
+<th>cd_only</th>
+<td>49.09%</td>
+<td>47.48%</td>
+<td>0.7916</td>
+</tr>
+<tr>
+<th>language_ENGLISH</th>
+<td>95.45%</td>
+<td>93.53%</td>
+<td>0.4352</td>
+</tr>
+<tr>
+<th>race_BLACK</th>
+<td>9.51%</td>
+<td>5.76%</td>
+<td>0.1976</td>
+</tr>
+<tr>
+<th>race_HISPANIC/LATINO</th>
+<td>2.02%</td>
+<td>0.72%</td>
+<td>0.4652</td>
+</tr>
+<tr>
+<th>race_OTHER</th>
+<td>6.07%</td>
+<td>7.19%</td>
+<td>0.7450</td>
+</tr>
+<tr>
+<th>race_WHITE</th>
+<td>81.68%</td>
+<td>86.33%</td>
+<td>0.2205</td>
+</tr>
+<tr>
+<th>marital_status_MARRIED</th>
+<td>44.74%</td>
+<td>50.36%</td>
+<td>0.2478</td>
+</tr>
+<tr>
+<th>marital_status_SINGLE</th>
+<td>33.60%</td>
+<td>26.62%</td>
+<td>0.1220</td>
+</tr>
+<tr>
+<th>marital_status_WIDOWED</th>
+<td>11.94%</td>
+<td>13.67%</td>
+<td>0.6568</td>
+</tr>
+<tr>
+<th>insurance_Medicare</th>
+<td>44.33%</td>
+<td>61.87%</td>
+<td>0.0002*</td>
+</tr>
+<tr>
+<th>insurance_Other</th>
+<td>47.57%</td>
+<td>33.09%</td>
+<td>0.0018*</td>
+</tr>
+</tbody>
+</table>
 </div>
-</div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell-inputWrapper" tabindex="0">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [13]:</div>
-<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-<div class="cm-editor cm-s-jupyter">
-<div class="highlight hl-ipython3"><pre><span></span><span class="n">stats</span><span class="o">.</span><span class="n">transpose</span><span class="p">()</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s1">'stat.csv'</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-</div>
-</div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell-inputWrapper" tabindex="0">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [15]:</div>
-<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-<div class="cm-editor cm-s-jupyter">
-<div class="highlight hl-ipython3"><pre><span></span><span class="n">stat_diff</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s1">'stat_diff.csv'</span><span class="p">)</span>
-</pre></div>
 </div>
 </div>
 </div>
