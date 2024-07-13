@@ -1,1 +1,1 @@
-# Graduation Project
+# Senior design
