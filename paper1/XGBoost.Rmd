@@ -10,14 +10,14 @@ output:
 
 ```{r}
 rm(list=ls(all=TRUE))
-setwd('C:/Users/sitdo/Documents/GitHub/IBD-EDA/paper1/')
+# setwd('C:/Users/sitdo/Documents/GitHub/IBD-EDA/paper1/')
+setwd('/Volumes/Disk/Project/IBD-EDA/paper1/')
 ```
 
 # Loading Data
 
 ```{r}
 library(dplyr)
-
 data <- read.csv("./data_preprocessed/data.csv") %>% select(-1)
 ```
 

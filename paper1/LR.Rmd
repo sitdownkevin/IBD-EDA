@@ -10,7 +10,8 @@ output:
 
 ```{r}
 rm(list=ls(all=TRUE))
-setwd('C:/Users/sitdo/Documents/GitHub/IBD-EDA/paper1/')
+# setwd('C:/Users/sitdo/Documents/GitHub/IBD-EDA/paper1/')
+setwd('/Volumes/Disk/Project/IBD-EDA/paper1/')
 ```
 
 # Loading Data
@@ -300,6 +301,43 @@ final_model <- glm(
 
 summary_model <- summary(final_model)
 print(summary_model)
+```
+
+### Shap Value
+
+```{r}
+library(shapr)
+
+columns_to_extract <- c("insurance_Medicare", "marital_status_WIDOWED", "X4019", "X5849", "X5990", "X42731", "X25000", "I10", "X56089", "X4280", "X73300", "X40390", "X2875", "X32723", "X496", "X99592", "D649", "X51881", "X412")
+
+explainer <- shapr(train_data[, columns_to_extract], final_model, n_combinations = 19)
+
+```
+
+```{r}
+library(dplyr)
+selected_data <- dplyr::select(train_data, all_of(columns_to_extract))
+
+# Specifying the phi_0, i.e. the expected prediction without any features
+p <- mean(train_data[, c("dod")])
+
+# Computing the actual Shapley values with kernelSHAP accounting for feature dependence using
+# the empirical (conditional) distribution approach with bandwidth parameter sigma = 0.1 (default)
+explanation <- explain(
+  selected_data,
+  approach = "empirical",
+  explainer = explainer,
+  prediction_zero = p
+)
+```
+
+```{r}
+# Printing the Shapley values for the test data.
+# For more information about the interpretation of the values in the table, see ?shapr::explain.
+print(explanation$dt)
+
+# Plot the resulting explanations for observations 1 and 6
+plot(explanation, plot_phi0 = FALSE, index_x_test = c(1, 6))
 ```
 
 ### Performance
