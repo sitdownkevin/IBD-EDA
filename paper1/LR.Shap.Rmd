@@ -1,0 +1,378 @@
+---
+title: "LR.Shap"
+output: 
+  html_notebook: 
+    toc: true
+    theme: cosmo
+---
+
+# Setting
+
+```{r}
+rm(list=ls(all=TRUE))
+# setwd('C:/Users/sitdo/Documents/GitHub/IBD-EDA/paper1/')
+setwd('/Volumes/Disk/Project/IBD-EDA/paper1/')
+```
+
+# Loading Data
+
+```{r}
+library(dplyr)
+library(tidyverse)
+library(ggbeeswarm)
+
+data <- read.csv("./data_preprocessed/data.csv")[-1]
+```
+
+
+# Installing Packages
+
+```{r}
+library(MASS)
+library(caret)
+```
+
+# With Selecting
+
+## Method I: Splitting Data
+
+```{r}
+set.seed(123)  # 设置随机数种子
+splitting_ratio <- 0.7
+
+indices <- 1:nrow(data)
+shuffled_indices <- sample(indices) 
+train_size <- floor(splitting_ratio * length(indices))
+
+train_indices <- shuffled_indices[1:train_size]
+test_indices <- shuffled_indices[(train_size + 1):length(indices)]
+
+train_data <- data[train_indices, ]
+test_data <- data[test_indices, ]
+```
+
+Building Formula
+
+```{r}
+# removed_variables <- c("anchor_age")
+removed_variables <- c("")
+
+variables <- setdiff(names(data), c("dod", removed_variables))
+
+formula_str <- paste("dod ~", paste(variables, collapse = " + "))
+
+new_formula <- as.formula(formula_str)
+```
+
+AIC Step
+
+```{r}
+p_value_threshold <- 0.05
+
+repeat {
+  new_model <- glm(
+    formula = new_formula,
+    family = binomial,
+    data = train_data
+  )
+  
+  summary_model <- summary(new_model)
+
+  p_values <- summary_model$coefficients[, "Pr(>|z|)"]
+  
+  max_p_value <- max(p_values)
+  max_p_value_attribute <- names(which.max(p_values))
+  
+  # 检查最大P值是否超过阈值
+  if (max_p_value > p_value_threshold) {
+      # 如果超过阈值，从公式中移除该变量并继续循环
+      print(max_p_value_attribute)
+    
+      removed_variables <- c(removed_variables, max_p_value_attribute)
+      
+      variables <- setdiff(names(train_data), c("dod", removed_variables))
+      
+      formula_str <- paste("dod ~", paste(variables, collapse = " + "))
+      
+      new_formula <- as.formula(formula_str)
+  } else {
+      # 如果所有变量的P值都不超过阈值，则停止循环
+      break
+  }
+}
+
+```
+
+## Final Model
+
+```{r}
+print(new_formula)
+```
+
+```{r}
+final_model <- glm(
+  formula = new_formula,
+  family = binomial,
+  data = train_data
+)
+
+summary_model <- summary(final_model)
+print(summary_model)
+```
+```{r}
+saveRDS(final_model, './final_model.rds')
+saveRDS(train_data, './train_data.rds')
+saveRDS(new_formula, './new_formula.rds')
+```
+
+
+### Shap Value
+
+```{r}
+feature_names <- attr(terms(new_formula), "term.labels")
+feature_names <- c("", feature_names) # 添加空字符串到开头
+feature_names <- feature_names[-1]
+feature_names
+```
+
+```{r}
+library(dplyr)
+
+selected_data <- dplyr::select(train_data, all_of(feature_names))
+selected_data
+```
+
+```{r}
+library(fastshap)
+
+
+pred_wrapper <- function(model, newdata) {
+  predict(model, newdata, type = 'response')
+}
+
+shap_values <- fastshap::explain(
+  final_model,
+  X = selected_data,
+  nsim = 100,
+  pred_wrapper = pred_wrapper
+)
+```
+
+```{r}
+dim(shap_values)
+head(shap_values)
+```
+
+```{r}
+preds = predict(final_model, selected_data, type = "response")
+base_value = mean(preds)
+base_value
+```
+
+```{r}
+as_tibble(train_data) %>% 
+  rownames_to_column('row_id') %>%
+  pivot_longer(names_to='var', values_to='value', -row_id) -> vars
+
+as_tibble(shap_values) %>% 
+  rownames_to_column('row_id') %>%
+  pivot_longer(names_to='var', values_to='shap', -row_id) -> shaps
+
+
+df = inner_join(vars, shaps, by=c('row_id', 'var'))
+df$shap <- as.numeric(df$shap)
+df$var <- as.character(df$var)
+# df$value <- as.character(df$value)
+df$value <- as.numeric(df$value)
+
+head(df)
+```
+
+```{r}
+filter(df, row_id==1) %>%
+ggplot(aes(x=shap, y=fct_reorder(paste0(var,'=',value),shap), fill=factor(sign(shap)))) +
+geom_col() + guides(fill='none') + 
+labs(y="", title="shap values for X[1,]")
+```
+
+```{r}
+group_by(df, var) %>% mutate(nv=scale(value)) %>%
+  ggplot(aes(x=shap, y=var, color=nv)) +
+  geom_quasirandom(groupOnX = FALSE, dodge.width = 0.3) +
+  scale_color_viridis_c(option = 'H', limits=c(-3, 3), oob=scales::oob_squish) +
+  labs(title='distribution of shap values for all samples', y='',color='z-scaled values')
+```
+
+```{r}
+group_by(df, var) %>% 
+summarize(mean=mean(abs(shap))) %>%
+ggplot(aes(x=mean, y=fct_reorder(var, mean))) + 
+geom_col() +
+labs(x='mean(|shap value|)', title='mean absolute shap for all samples', y="")
+```
+
+
+```{r}
+group_by(df, var, sign=factor(sign(shap))) %>%
+summarize(mean=mean(shap)) %>%
+ggplot(aes(x=mean, y=fct_reorder(var, mean), fill=sign)) + 
+geom_col() +
+labs(x='mean(shap value)', title='mean shap for all samples', y="")
+```
+
+
+### Performance
+
+```{r}
+predictions <- predict(final_model, test_data, type="response")
+```
+
+#### Confusion Matrix
+
+```{r}
+confusion_matrix <- table(
+  as.numeric(test_data$dod), as.numeric(ifelse(predictions > 0.5, 1, 0))
+)
+
+TP <- confusion_matrix[1, 1]
+TN <- confusion_matrix[2, 2]
+FP <- confusion_matrix[2, 1]
+FN <- confusion_matrix[1, 2]
+
+## Calculate Accuracy
+accuracy <- (TP + TN) / (TP + FP + TN + FN)
+cat("Accuracy:", accuracy, "\n")
+
+## Calculate Recall
+recall <- TP / (TP + FN)
+cat("Recall:", recall, "\n")
+
+## Calculate Precision
+precision <- TP / (TP + FP)
+cat("Precision:", precision, "\n")
+
+## Calculate Specificity
+specificity <- TN / (TN + FP)
+cat("Specificity:", specificity, "\n")
+
+## Calculate F1 Score
+f1_score <- 2 * (precision * recall) / (precision + recall)
+cat("F1 Score:", f1_score, "\n")
+```
+
+#### ROC Curve
+
+```{r}
+library(pROC)
+# Calculate ROC curve using the actual values and predictions
+roc_obj <- roc(
+  as.numeric(test_data$dod), predictions
+)
+
+# Plot the ROC curve
+plot(
+  roc_obj,
+  col = "blue",
+  main = "ROC Curve - Logistic Regression",
+  legacy.axes = TRUE,
+  print.auc = TRUE,
+  print.thres = TRUE,
+  grid = c(0.2, 0.2),
+  grid.col = c("green", "orange")
+)
+```
+
+#### CI
+
+```{r}
+ci <- confint(final_model)
+exp(cbind(OR <- coef(final_model), ci))
+```
+
+## Method II: Cross Validation
+
+```{r}
+# Perform 10-fold cross-validation
+num_folds <- 10
+
+folds <- cut(seq(1, nrow(data)), breaks = num_folds, labels = FALSE)
+```
+
+```{r}
+# Create empty vectors to store the predictions and actual values
+all_predictions <- vector()
+all_actuals <- vector()
+
+for (i in 1:num_folds) {
+  # Split the data into training and test sets for the current fold
+  train_data <- data[folds != i, ]
+  test_data <- data[folds == i, ]
+  
+  # Logistic Regression
+  model <- glm(formula = new_formula, 
+               family = binomial, 
+               data = train_data)
+
+  predictions <- predict(model, test_data, type="response")
+
+  # Append the predictions and actual values to the vectors
+  all_predictions <- c(all_predictions, predictions)
+  all_actuals <- c(all_actuals, test_data$dod)
+}
+```
+
+### Performance
+
+#### Confusion Matrix
+
+```{r}
+confusion_matrix <- table(
+  as.numeric(all_actuals), as.numeric(ifelse(all_predictions > 0.5, 1, 0))
+)
+
+TP <- confusion_matrix[1, 1]
+TN <- confusion_matrix[2, 2]
+FP <- confusion_matrix[2, 1]
+FN <- confusion_matrix[1, 2]
+
+## Calculate Accuracy
+accuracy <- (TP + TN) / (TP + FP + TN + FN)
+cat("Accuracy:", accuracy, "\n")
+
+## Calculate Recall
+recall <- TP / (TP + FN)
+cat("Recall:", recall, "\n")
+
+## Calculate Precision
+precision <- TP / (TP + FP)
+cat("Precision:", precision, "\n")
+
+## Calculate Specificity
+specificity <- TN / (TN + FP)
+cat("Specificity:", specificity, "\n")
+
+## Calculate F1 Score
+f1_score <- 2 * (precision * recall) / (precision + recall)
+cat("F1 Score:", f1_score, "\n")
+```
+
+#### ROC Curve
+
+```{r}
+# Calculate ROC curve using the actual values and predictions
+roc_obj <- roc(
+  as.numeric(all_actuals), all_predictions
+)
+
+# Plot the ROC curve
+plot(
+  roc_obj,
+  col = "blue",
+  main = "ROC Curve - Logistic Regression (Cross Validation)",
+  legacy.axes = TRUE,
+  print.auc = TRUE,
+  print.thres = TRUE,
+  grid = c(0.2, 0.2),
+  grid.col = c("green", "orange")
+)
+```
