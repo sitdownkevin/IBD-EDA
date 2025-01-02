@@ -119,6 +119,13 @@ final_model <- glm(
 summary_model <- summary(final_model)
 print(summary_model)
 ```
+
+```{r}
+ci <- confint(final_model)
+exp(cbind(OR <- coef(final_model), ci))
+```
+
+
 ```{r}
 saveRDS(final_model, './final_model.rds')
 saveRDS(train_data, './train_data.rds')
@@ -193,6 +200,30 @@ filter(df, row_id==1) %>%
 ggplot(aes(x=shap, y=fct_reorder(paste0(var,'=',value),shap), fill=factor(sign(shap)))) +
 geom_col() + guides(fill='none') + 
 labs(y="", title="shap values for X[1,]")
+```
+
+```{r}
+feature_mapping <- c(
+  "X99592" = "Severe sepsis",
+  "X5990" = "Urinary tract infection",
+  "X56089" = "Other specified intestinal obstruction",
+  "X51881" = "Acute respiratory failure",
+  "X4280" = "Congestive heart failure",
+  "X412" = "Old myocardial infarction",
+  "X311" = "Depressive disorder",
+  "X3051" = "Tobacco use disorder",
+  "X2875" = "Thrombocytopenia",
+  "X27800" = "Obesity",
+  "X2762" = "Acidosis",
+  "X2761" = "Hyposmolality and/or hyponatremia",
+  "X25000" = "Diabetes mellitus",
+  "V442" = "Ileostomy status",
+  "V1582" = "Personal history of tobacco use",
+  "D649" = "Type 2 diabetes mellitus with hypoglycemia without coma",
+  "anchor_age" = "Age"
+)
+
+df$var <- feature_mapping[df$var]
 ```
 
 ```{r}
